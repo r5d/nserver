@@ -88,11 +88,9 @@ int main(void)
  error:
     if (sockfd_s) {
         rc = close(sockfd_s);
-        check(rc == 0, "statserv: close failed");
     }
     if (sockfd_c) {
         rc = close(sockfd_c);
-        check(rc == 0, "statserv: close failed");
     }
 
     return -1;
