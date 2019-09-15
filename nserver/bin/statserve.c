@@ -6,8 +6,8 @@
 #include <netdb.h>
 
 #include <dbg.h>
+#include <nsocket.h>
 
-#define PORT "7899"
 #define BACKLOG 10
 
 int echo(int sock, char *buf, int len)
@@ -55,26 +55,12 @@ int main(void)
 {
     int rc = 0;
     int sockfd_s = 0, sockfd_c = 0;
-    struct addrinfo hints;
-    struct addrinfo *servinfo = NULL;
     struct sockaddr sockaddr_c;
     socklen_t sockaddr_c_len;
     pid_t pidc;
 
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-
-    rc = getaddrinfo(NULL, PORT, &hints, &servinfo);
-    check(rc == 0, "statserve: getaddrinfo failed");
-
-    sockfd_s = socket(servinfo->ai_family, servinfo->ai_socktype,
-                servinfo->ai_protocol);
-    check(sockfd_s != 0, "statserve: socket failed");
-
-    rc = bind(sockfd_s, servinfo->ai_addr, servinfo->ai_addrlen);
-    check(rc == 0, "statserve: bind failed");
+    sockfd_s = get_socket();
+    check(sockfd_s > 0, "stateserv: unable to get socket");
 
     rc = listen(sockfd_s, BACKLOG);
     check(rc == 0, "statserve: listen failed");
@@ -94,17 +80,12 @@ int main(void)
         check(rc == 0, "statserv: close failed");
     } while(1);
 
-    // Clean up.
-    freeaddrinfo(servinfo);
-
     rc = close(sockfd_s);
     check(rc == 0, "statserv: close failed");
 
     return 0;
 
  error:
-    if (servinfo)
-        freeaddrinfo(servinfo);
     if (sockfd_s) {
         rc = close(sockfd_s);
         check(rc == 0, "statserv: close failed");
