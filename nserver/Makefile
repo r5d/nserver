@@ -16,7 +16,7 @@ TARGET=build/libnserve.a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 
 # The Target Build
-all: $(PROGRAMS) TAGS
+all: $(TARGET) $(SO_TARGET) $(PROGRAMS) TAGS
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
@@ -28,7 +28,7 @@ $(TARGET): build $(OBJECTS)
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
 
-$(PROGRAMS): LDLIBS += -lm
+$(PROGRAMS): LDLIBS += $(TARGET) -lm
 
 build:
 	@mkdir -p build
