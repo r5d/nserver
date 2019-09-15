@@ -9,6 +9,7 @@ int get_socket()
 {
     int sockfd = 0;
     int rc = 0;
+    int y = 1;
 
     struct addrinfo hints;
     struct addrinfo *servinfo = NULL;
@@ -23,22 +24,30 @@ int get_socket()
     check(rc == 0, "get_socket: getaddrinfo failed");
 
     // Loop through the addresses and find one that works.
-    sockfd = 0;
-    addr = servinfo;
-    do {
+    for (addr = servinfo;  addr != NULL; sockfd = 0,
+             addr = addr->ai_next)  {
         sockfd = socket(addr->ai_family, addr->ai_socktype,
                           addr->ai_protocol);
-        if (sockfd > 0) {
-            break;
+        if (sockfd < 1) {
+            continue;
         }
 
-        addr = addr->ai_next;
-    } while(addr);
-    check(sockfd > 0, "unable to get socket");
+        // dodge the "address already in use" error.
+        rc = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
+                        &y, sizeof(int));
+        if (rc != 0) {
+            continue;
+        }
 
-    // assign name to socket.
-    rc = bind(sockfd, addr->ai_addr, addr->ai_addrlen);
-    check(rc == 0, "get_socket: bind failed");
+        // assign name to socket.
+        rc = bind(sockfd, addr->ai_addr, addr->ai_addrlen);
+        if (rc != 0) {
+            continue;
+        }
+
+        break;
+    }
+    check(sockfd > 0, "unable to get socket");
 
     // Cleanup.
     freeaddrinfo(servinfo);
