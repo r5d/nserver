@@ -1,55 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-
-#include <dbg.h>
+#include <necho.h>
 #include <nsocket.h>
 
 #define BACKLOG 10
-
-int echo(int sock, char *buf, int len)
-{
-    int bytes = 0;
-
-    bytes = send(sock, buf, len, 0);
-    check(bytes >= 0, "statserv: send failed");
-
-    return bytes;
- error:
-    return -1;
-}
-
-void serve(int sock)
-{
-    int rc = 0;
-    int buf_len = 1000;
-    char buf[buf_len];
-    ssize_t bytes;
-
-    do {
-        bytes = recv(sock, buf, buf_len, 0);
-        check(bytes >= 0, "statserv: recv failed");
-
-        if (bytes < 1) {
-            break;
-        }
-
-        rc = echo(sock, buf, bytes);
-        check(rc != -1, "statserv: echo failed");
-    } while(1);
-
-    rc = close(sock);
-    check(rc == 0, "statserv: close failed");
-
-    exit(0);
- error:
-    rc = close(sock);
-    check(rc == 0, "statserv: close failed");
-    exit(1);
-}
 
 int main(void)
 {
@@ -73,7 +25,7 @@ int main(void)
         check(pidc != -1, "statserve: fork failed");
 
         if (pidc == 0) {
-            serve(sockfd_c);
+            echoserve(sockfd_c);
         }
 
         rc = close(sockfd_c);
