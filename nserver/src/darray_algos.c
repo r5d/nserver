@@ -86,7 +86,7 @@ int DArray_fucked_qsort(DArray *array, DArray_compare cmp)
 #define DArray_fucked_heapsort_ileft_child(i) ((2*i + 1))
 #define DArray_fucked_heapsort_iright_child(i) ((2*i + 2))
 
-inline void DArray_fucked_heapsort_swap(DArray *array, int a, int b)
+static inline void DArray_fucked_heapsort_swap(DArray *array, int a, int b)
 {
     void *tmp = array->contents[a];
     array->contents[a] = array->contents[b];
