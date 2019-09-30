@@ -1,6 +1,4 @@
 #include <darray_algos.h>
-#include <math.h>
-#include <stdlib.h>
 
 int DArray_qsort(DArray *array, DArray_compare cmp)
 {
