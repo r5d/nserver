@@ -1,7 +1,9 @@
 #ifndef _protocol_h
 #define _protocol_h
 
+#include <bstrlib.h>
 #include <hashmap.h>
+#include <stats.h>
 #include <dbg.h>
 
 int sscreate(char *key);
