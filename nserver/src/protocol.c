@@ -91,7 +91,7 @@ double ssmean(char *key)
     // 1. create bstring from 'key'.
     bstring k = bfromcstr(key);
 
-    // 2. try to Stats for key.
+    // 2. try to get Stats for key.
     Stats *st = (Stats *) Hashmap_get(hash, k);
     check(st != NULL, "stats not found for key");
 
