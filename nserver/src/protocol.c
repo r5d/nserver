@@ -57,3 +57,22 @@ int sssample(char *key, double s)
     return -1;
 }
 
+double ssmean(char *key)
+{
+    check(hash != NULL, "hash not initialized");
+
+    // 1. create bstring from 'key'.
+    bstring k = bfromcstr(key);
+
+    // 2. try to Stats for key.
+    Stats *st = (Stats *) Hashmap_get(hash, k);
+    check(st != NULL, "stats not found for key");
+
+    // 3. get mean.
+    double m = Stats_mean(st);
+
+    return m;
+ error:
+    return -1;
+}
+

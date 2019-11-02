@@ -42,12 +42,29 @@ char *test_sssample()
     return NULL;
 }
 
+char *test_ssmean()
+{
+    double m = 0;
+
+    m = ssmean("crimson");
+    mu_assert(m == 8, "ssmean failed 0");
+
+    m = ssmean("/vermilion");
+    mu_assert(m == 17, "ssmean failed 1");
+
+    m = ssmean("/ruby");
+    mu_assert(m == -1, "ssmean failed 2");
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
 
     mu_run_test(test_sscreate);
     mu_run_test(test_sssample);
+    mu_run_test(test_ssmean);
 
     return NULL;
 }
