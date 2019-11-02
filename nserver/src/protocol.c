@@ -103,3 +103,22 @@ double ssmean(char *key)
     return -1;
 }
 
+char *ssdump(char *key)
+{
+    check(hash != NULL, "hash not initialized");
+
+    // 1. create bstring from 'key'.
+    bstring k = bfromcstr(key);
+
+    // 2. try to get Stats for key.
+    Stats *st = (Stats *) Hashmap_get(hash, k);
+    check(st != NULL, "stats not found for key");
+
+    // 3. get dump.
+    char *dstr = Stats_dump(st);
+    check(dstr != NULL, "dump failed for key");
+
+    return dstr;
+ error:
+    return NULL;
+}

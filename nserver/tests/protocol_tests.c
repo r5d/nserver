@@ -58,6 +58,34 @@ char *test_ssmean()
     return NULL;
 }
 
+char *test_ssdump()
+{
+    char *dstr = NULL;
+
+    dstr = ssdump("crimson");
+    mu_assert(dstr != NULL, "ssdump failed 0");
+    debug("DUMP: %s", dstr);
+
+    // clean up.
+    free(dstr);
+
+    dstr = ssdump("/vermilion");
+    mu_assert(dstr != NULL, "ssdump failed 1");
+    debug("DUMP: %s", dstr);
+
+    // clean up.
+    free(dstr);
+
+    dstr = ssdump("/ruby");
+    mu_assert(dstr == NULL, "ssdump failed 2");
+    debug("DUMP: %s", dstr);
+
+    // clean up.
+    free(dstr);
+
+    return NULL;
+}
+
 char *test_ssdelete()
 {
     int rc = 0;
@@ -81,6 +109,7 @@ char *all_tests()
     mu_run_test(test_sscreate);
     mu_run_test(test_sssample);
     mu_run_test(test_ssmean);
+    mu_run_test(test_ssdump);
     mu_run_test(test_ssdelete);
 
     return NULL;
