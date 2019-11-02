@@ -5,10 +5,10 @@ char *test_sscreate()
 {
     int rc = 0;
 
-    rc = sscreate("fuck");
+    rc = sscreate("crimson");
     mu_assert(rc == 0, "sscreate failed 0");
 
-    rc = sscreate("/sodo");
+    rc = sscreate("/vermilion");
     mu_assert(rc == 0, "sscreate failed 1");
 
     return NULL;
