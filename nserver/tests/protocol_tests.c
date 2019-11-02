@@ -6,7 +6,10 @@ char *test_sscreate()
     int rc = 0;
 
     rc = sscreate("fuck");
-    mu_assert(rc == 0, "sscreate failed");
+    mu_assert(rc == 0, "sscreate failed 0");
+
+    rc = sscreate("/sodo");
+    mu_assert(rc == 0, "sscreate failed 1");
 
     return NULL;
 }
