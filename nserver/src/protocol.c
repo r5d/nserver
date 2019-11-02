@@ -36,3 +36,24 @@ int sscreate(char *key)
  error:
     return -1;
 }
+
+int sssample(char *key, double s)
+{
+    check(hash != NULL, "hash not initialized");
+
+    // 1. create bstring from 'key'.
+    bstring k = bfromcstr(key);
+    check(k != NULL, "key creation failed");
+
+    // 2. try to get Stats for key.
+    Stats *st = (Stats *) Hashmap_get(hash, k);
+    check(st != NULL, "stats not found for key");
+
+    // 3. sample!
+    Stats_sample(st, s);
+
+    return 0;
+ error:
+    return -1;
+}
+
