@@ -58,6 +58,22 @@ char *test_ssmean()
     return NULL;
 }
 
+char *test_ssdelete()
+{
+    int rc = 0;
+
+    rc = ssdelete("crimson");
+    mu_assert(rc == 0, "delete failed 0");
+
+    rc = ssdelete("/vermilion");
+    mu_assert(rc == 0, "delete failed 1");
+
+    rc = ssdelete("/ruby");
+    mu_assert(rc == 0, "delete failed 2");
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
@@ -65,6 +81,7 @@ char *all_tests()
     mu_run_test(test_sscreate);
     mu_run_test(test_sssample);
     mu_run_test(test_ssmean);
+    mu_run_test(test_ssdelete);
 
     return NULL;
 }

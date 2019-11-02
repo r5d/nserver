@@ -37,6 +37,33 @@ int sscreate(char *key)
     return -1;
 }
 
+int ssdelete(char *key)
+{
+    check(hash != NULL, "hash not initialized");
+
+    // 1. create bstring from 'key'.
+    bstring k = bfromcstr(key);
+    check(k != NULL, "key creation failed");
+
+    // 2. check if key exists.
+    Stats *st = (Stats *) Hashmap_get(hash, k);
+    if (st == NULL) {
+        // key does not exists.
+        return 0;
+    }
+
+    // 3. delete key.
+    st = (Stats *) Hashmap_delete(hash, k);
+    check(st != NULL, "hash key delete failed");
+
+    // 4. clean up the stats for this key.
+    free(st);
+
+    return 0;
+ error:
+    return -1;
+}
+
 int sssample(char *key, double s)
 {
     check(hash != NULL, "hash not initialized");
