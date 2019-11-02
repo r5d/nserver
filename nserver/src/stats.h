@@ -17,7 +17,7 @@ Stats *Stats_create();
 
 void Stats_sample(Stats *st, double s);
 
-void Stats_dump(Stats *st);
+char *Stats_dump(Stats *st);
 
 static inline double Stats_mean(Stats *st)
 {

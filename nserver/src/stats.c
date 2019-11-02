@@ -44,11 +44,24 @@ void Stats_sample(Stats *st, double s)
     st->n += 1;
 }
 
-void Stats_dump(Stats *st)
+char *Stats_dump(Stats *st)
 {
-    fprintf(stderr,
-            "sum: %f, sumsq: %f, n: %ld, "
-            "min: %f, max: %f, mean: %f, stddev: %f",
-            st->sum, st->sumsq, st->n, st->min, st->max, Stats_mean(st),
-            Stats_stddev(st));
+    size_t char_sz = sizeof(char);
+    size_t dstr_len = 280 * char_sz;
+
+    // allocate space for dump string.
+    char *dstr = calloc(dstr_len, char_sz);
+    check_mem(dstr);
+
+    // dump into dump str.
+    int rc = snprintf(dstr, dstr_len,
+                      "sum: %f, sumsq: %f, n: %ld, "
+                      "min: %f, max: %f, mean: %f, stddev: %f",
+                      st->sum, st->sumsq, st->n, st->min, st->max,
+                      Stats_mean(st), Stats_stddev(st));
+    check(rc > 0, "stats dump failed");
+
+    return dstr;
+ error:
+    return NULL;
 }
