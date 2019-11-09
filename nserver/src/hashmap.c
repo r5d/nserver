@@ -34,6 +34,26 @@ static uint32_t default_hash(void *a)
     return hash;
 }
 
+/**
+ * Fucked up version of FNV hash
+ */
+uint32_t fnv_hash(void *a)
+{
+    size_t len = blength((bstring) a);
+    char *key = bdata((bstring) a);
+    uint32_t hash =  0;
+    uint32_t i =  0;
+    uint32_t fnv_prime = 16777619;
+    uint32_t fnv_offset_basis = 2166136261;
+
+    hash = fnv_offset_basis;
+    for (i = 0; i < len; ++i) {
+        hash *= fnv_prime;
+        hash ^= key[i];
+    }
+
+    return hash;
+}
 
 Hashmap *Hashmap_create(Hashmap_compare compare, Hashmap_hash hash)
 {
@@ -197,6 +217,35 @@ void *Hashmap_get(Hashmap *map, void *key)
     return NULL;
 }
 
+/**
+ * Sets key <-> data iff key is not already present in Hashmap.
+ */
+int Hashmap_set_fucked(Hashmap *map, void *key, void *data)
+{
+    uint32_t hash = 0;
+    DArray *bucket = Hashmap_find_bucket(map, key, 1, &hash);
+    check(bucket, "Error can't create bucket");
+
+    int i = Hashmap_get_node(map, hash, bucket, key);
+    if (i >= 0) {
+        // Element with `key` already exists. Do nothing.
+        return 0;
+    }
+
+    // Element with `key` does not exist. Add it to Hashmap.
+    HashmapNode *node = Hashmap_node_create(hash, key, data);
+    check_mem(node);
+
+    DArray_push(bucket, node);
+
+    // Sort the bucket.
+    int rc = DArray_heapsort(bucket, (DArray_compare) map->compare);
+    check(rc == 0, "Error sorting bucket");
+
+    return 1;
+ error:
+    return -1;
+}
 
 int Hashmap_traverse(Hashmap *map, Hashmap_traverse_cb traverse_cb)
 {
