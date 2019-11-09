@@ -268,6 +268,41 @@ int Hashmap_traverse(Hashmap *map, Hashmap_traverse_cb traverse_cb)
     return 0;
 }
 
+/**
+ * Returns all keys of the hashmap as a DArray.
+ *
+ * Use DArray_destroy on the 'keys' returned by this function after
+ * use.
+ */
+DArray *Hashmap_keys(Hashmap *map)
+{
+    check(map != NULL, "map is NULL");
+
+    DArray *keys = DArray_create(sizeof(void *),
+                                 DEFAULT_NUMBER_OF_KEYS);
+    check(keys != NULL, "Unable to initialize keys");
+
+    int i = 0;
+    int j = 0;
+
+    for (i = 0; i < DArray_count(map->buckets); i++) {
+        DArray *bucket = DArray_get(map->buckets, i);
+        if (bucket) {
+            for (j = 0; j < DArray_count(bucket); j++) {
+                HashmapNode *node = DArray_get(bucket, j);
+
+                if (node) {
+                    DArray_push(keys, node->key);
+                }
+            }
+        }
+    }
+
+    return keys;
+ error:
+    return NULL;
+}
+
 void *Hashmap_delete(Hashmap *map, void *key)
 {
     uint32_t hash = 0;

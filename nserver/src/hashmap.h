@@ -5,6 +5,7 @@
 #include <darray.h>
 
 #define DEFAULT_NUMBER_OF_BUCKETS 100
+#define DEFAULT_NUMBER_OF_KEYS 50
 
 typedef int (*Hashmap_compare) (void *a, void *b);
 typedef uint32_t(*Hashmap_hash) (void *key);
@@ -35,6 +36,8 @@ void *Hashmap_get(Hashmap *map, void *key);
 int Hashmap_traverse(Hashmap *map, Hashmap_traverse_cb travers_cb);
 
 void *Hashmap_delete(Hashmap *map, void *key);
+
+DArray *Hashmap_keys(Hashmap *map);
 
 uint32_t fnv_hash(void *a);
 #endif
