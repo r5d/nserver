@@ -122,3 +122,33 @@ char *ssdump(char *key)
  error:
     return NULL;
 }
+
+char *sslist()
+{
+    check(hash != NULL, "hash not initiliazed");
+
+    // 1. Get keys.
+    DArray *ks = Hashmap_keys(hash);
+    check(ks != NULL, "error getting keys");
+
+    bstring ks_str = bfromcstr("");
+    check(ks_str != NULL, "error creating keys_str");
+
+    int i, rc;
+    bstring k = NULL;
+    for (i = 0; i < DArray_count(ks); ++i) {
+        k = (bstring) DArray_get(ks, i);
+        check(k != NULL, "k at %d", i);
+
+        rc = bconcat(ks_str, k);
+        check(rc == BSTR_OK, "bstr key concat failed");
+
+        rc = bconchar(ks_str, '\n');
+        check(rc == BSTR_OK, "bstr newline concat failed");
+    }
+
+    return bstr2cstr(ks_str, ' ');
+ error:
+    return NULL;
+}
+

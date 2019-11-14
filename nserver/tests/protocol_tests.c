@@ -86,6 +86,17 @@ char *test_ssdump()
     return NULL;
 }
 
+char *test_sslist()
+{
+    char *ks = sslist();
+    mu_assert(ks != NULL, "sslist failed");
+    mu_assert(strlen(ks) == 19, "length check failed");
+
+    debug("KEYS:\n %s", ks);
+
+    return NULL;
+}
+
 char *test_ssdelete()
 {
     int rc = 0;
@@ -110,6 +121,7 @@ char *all_tests()
     mu_run_test(test_sssample);
     mu_run_test(test_ssmean);
     mu_run_test(test_ssdump);
+    mu_run_test(test_sslist);
     mu_run_test(test_ssdelete);
 
     return NULL;
