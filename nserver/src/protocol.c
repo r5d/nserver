@@ -125,10 +125,12 @@ char *ssdump(char *key)
 
 char *sslist()
 {
+    DArray *ks = NULL;
+
     check(hash != NULL, "hash not initiliazed");
 
     // 1. Get keys.
-    DArray *ks = Hashmap_keys(hash);
+    ks = Hashmap_keys(hash);
     check(ks != NULL, "error getting keys");
 
     bstring ks_str = bfromcstr("");
@@ -147,8 +149,17 @@ char *sslist()
         check(rc == BSTR_OK, "bstr newline concat failed");
     }
 
+    // cleanup.
+    DArray_destroy(ks);
+
     return bstr2cstr(ks_str, ' ');
  error:
+
+    // cleanup
+    if (ks) {
+        DArray_destroy(ks);
+    }
+
     return NULL;
 }
 
