@@ -1,5 +1,5 @@
-#ifndef _necho_h
-#define _necho_h
+#ifndef _nserve_h
+#define _nserve_h
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,7 +9,6 @@
 #include <dbg.h>
 #include <ringbuffer.h>
 
-int echo(int sock, char *buf, int len);
-void echoserve(int sock);
+void nserve(int sock);
 
 #endif
