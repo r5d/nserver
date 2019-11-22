@@ -63,7 +63,7 @@ void nserve(int sock)
     check(rc == 0, "nserve: close failed");
 
     // Cleanup.
-    free(buf)
+    free(buf);
 
     exit(0);
  error:
