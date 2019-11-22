@@ -54,8 +54,16 @@ void nserve(int sock)
     ssize_t bytes = slurpsock(buf, buf_sz, sock);
     check(bytes >= 0, "nserve: slurpsock failed");
 
+    int rc = check_cmd_size(buf, sock);
+    check(rc != -1, "command size check failed");
+
+    // Quit immediately if cmd size is too large.
+    if (rc == 1) {
+        goto error;
+    }
+
     // Write response to socket.
-    int rc = barfsock(buf, bytes, sock);
+    rc = barfsock(buf, bytes, sock);
     check(rc != -1, "nserve: echo failed");
 
     // Close socket.
