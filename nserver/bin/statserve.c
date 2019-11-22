@@ -1,4 +1,4 @@
-#include <necho.h>
+#include <nserve.h>
 #include <nsocket.h>
 
 #define BACKLOG 10
@@ -25,7 +25,7 @@ int main(void)
         check(pidc != -1, "statserve: fork failed");
 
         if (pidc == 0) {
-            echoserve(sockfd_c);
+            nserve(sockfd_c);
         }
 
         rc = close(sockfd_c);
