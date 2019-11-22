@@ -36,7 +36,9 @@ int check_cmd_size(char *cmd, int sock)
     }
 
     char *err = "error: command invalid: size > 120 characters\n";
-    send(sock, err, strlen(err), 0);
+    ssize_t err_sz = strlen(err);
+    ssize_t bytes = send(sock, err, err_sz, 0);
+    check(bytes == err_sz, "check_cmd_size: send failed");
 
     return 1;
  error:
