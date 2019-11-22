@@ -25,6 +25,25 @@ int barfsock(char *buf, size_t buf_sz, int sock)
     return -1;
 }
 
+
+int check_cmd_size(char *cmd, int sock)
+{
+    check(cmd != NULL, "cmd is NULL");
+
+    size_t len = strlen(cmd);
+    if (len <= CMD_SIZE) {
+        return 0;
+    }
+
+    char *err = "error: command invalid: size > 120 characters\n";
+    send(sock, err, strlen(err), 0);
+
+    return 1;
+ error:
+    return -1;
+}
+
+
 void nserve(int sock)
 {
     size_t buf_sz = 200;
