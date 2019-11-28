@@ -105,12 +105,44 @@ char *test_check_cmd()
     return NULL;
 }
 
+char *test_cmd_parts()
+{
+    struct bstrList *parts = NULL;
+
+    bstring create = bfromcstr("/create");
+
+    char *bacon = "/create bacon";
+    parts = cmd_parts(bacon);
+    mu_assert(parts != NULL, "cmd parts failed");
+    mu_assert(parts->qty == 2, "qty check failed");
+    mu_assert(bstricmp(parts->entry[0], create) == 0,
+              "equality check failed");
+
+    // Cleanup
+    bstrListDestroy(parts);
+
+    char *ham = "/create           ham";
+    parts = cmd_parts(ham);
+    mu_assert(parts != NULL, "cmd parts failed");
+    mu_assert(parts->qty == 2, "qty check failed");
+    mu_assert(bstricmp(parts->entry[0], create) == 0,
+              "equality check failed");
+
+
+    // Cleanup
+    bdestroy(create);
+    bstrListDestroy(parts);
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
 
     mu_run_test(test_sanitize);
     mu_run_test(test_check_cmd);
+    mu_run_test(test_cmd_parts);
 
     return NULL;
 }
