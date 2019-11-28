@@ -135,6 +135,56 @@ char *test_cmd_parts()
     return NULL;
 }
 
+char *test_find_function()
+{
+    struct bstrList *parts = NULL;
+    int funk = 0;
+
+    char *bacon = "/create bacon";
+    parts = cmd_parts(bacon);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_CREATE, "find function create failed");
+
+    char *ham = "/create        ham";
+    parts = cmd_parts(ham);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_CREATE, "find function create failed");
+
+    char *sample = "/sample bacon 42";
+    parts = cmd_parts(sample);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_SAMPLE, "find function sample failed");
+
+    char *mean = "/mean bacon";
+    parts = cmd_parts(mean);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_MEAN, "find function mean failed");
+
+    char *dump = "/dump bacon";
+    parts = cmd_parts(dump);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_DUMP, "find function dump failed");
+
+    char *delete = "/delete bacon";
+    parts = cmd_parts(delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_DELETE, "find function delete failed");
+
+    char *list = "/list";
+    parts = cmd_parts(list);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_LIST, "find function list failed");
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
@@ -142,6 +192,7 @@ char *all_tests()
     mu_run_test(test_sanitize);
     mu_run_test(test_check_cmd);
     mu_run_test(test_cmd_parts);
+    mu_run_test(test_find_function);
 
     return NULL;
 }

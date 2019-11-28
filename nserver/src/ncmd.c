@@ -98,3 +98,56 @@ struct bstrList *cmd_parts(char *cmd)
     return NULL;
 }
 
+int find_function(struct bstrList *cmd_parts)
+{
+    // functions.
+    struct tagbstring fcreate = bsStatic("/create");
+    struct tagbstring fsample = bsStatic("/sample");
+    struct tagbstring fmean = bsStatic("/mean");
+    struct tagbstring fdump = bsStatic("/dump");
+    struct tagbstring fdelete = bsStatic("/delete");
+    struct tagbstring flist = bsStatic("/list");
+
+    check(cmd_parts != NULL, "cmd_parts is NULL");
+    check(cmd_parts->qty > 0, "qty check failed");
+
+    bstring cmd_name = cmd_parts->entry[0];
+    check(blength(cmd_name) > 0, "cmd_name check failed");
+
+    // trim cmd name
+    int rc = btrimws(cmd_name);
+    check(rc == BSTR_OK, "cmd name trim failed");
+
+    // find function for cmd_name
+    if (bstricmp(cmd_name, &fcreate) == 0) {
+        check(cmd_parts->qty == 2, "cmd invalid");
+
+        return NS_CREATE;
+    } else if (bstricmp(cmd_name, &fsample) == 0) {
+        check(cmd_parts->qty == 3, "cmd invalid");
+
+        return NS_SAMPLE;
+    } else if (bstricmp(cmd_name, &fmean) == 0) {
+        check(cmd_parts->qty == 2, "cmd invalid");
+
+        return NS_MEAN;
+    } else if (bstricmp(cmd_name, &fdump) == 0) {
+        check(cmd_parts->qty == 2, "cmd invalid");
+
+        return NS_DUMP;
+    } else if (bstricmp(cmd_name, &fdelete) == 0) {
+        check(cmd_parts->qty == 2, "cmd invalid");
+
+        return NS_DELETE;
+    } else if (bstricmp(cmd_name, &flist) == 0) {
+        check(cmd_parts->qty == 1, "cmd invalid");
+
+        return NS_LIST;
+    } else {
+        return NS_NOP;
+    }
+
+ error:
+    return NS_NOP;
+}
+
