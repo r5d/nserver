@@ -40,26 +40,30 @@ int sanitize(char *cmd)
     return -1;
 }
 
-int check_cmd_size(char *cmd, int sock)
+char *check_cmd(char *cmd)
 {
+    char *err = NULL;
+
     check(cmd != NULL, "cmd is NULL");
+
+    int rc = sanitize(cmd);
+    check(rc != -1, "sanitize failed");
 
     size_t len = strlen(cmd);
     if (len >= CMD_MIN_SIZE && len <= CMD_MAX_SIZE) {
-        return 0;
-    } else if (len == 0) {
-        char *q = "closing connection\n";
-        size_t bytes = barfsock(q, strlen(q), sock);
-        check(bytes == strlen(q), "send sock failed");
-    } else {
-        char *err = "cmd size invalid\n";
-        size_t bytes = barfsock(err, strlen(err), sock);
-        check(bytes == strlen(err), "send sock failed");
+        return NULL;
     }
 
-    return 1;
+    if (len == 0) {
+        err = "closing connection\n";
+    } else {
+        err = "command size invalid\n";
+    }
+
+    return err;
  error:
-    return -1;
+    err = "internal error\n";
+    return err;
 }
 
 
