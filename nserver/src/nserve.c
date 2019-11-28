@@ -73,21 +73,29 @@ void nserve(int sock)
     char *cmd = calloc(sizeof(char), cmd_sz);
     check_mem(cmd);
 
-    // Read command from socket.
-    ssize_t bytes = slurpsock(cmd, cmd_sz, sock);
-    check(bytes >= 0, "nserve: slurpsock failed");
+    int rc = 0;
+    char *err = NULL;
+    do {
+        // clear cmd.
+        memset(cmd, '\0', cmd_sz);
 
-    int rc = check_cmd_size(cmd, sock);
-    check(rc != -1, "command size check failed");
+        // Read command from socket.
+        ssize_t bytes = slurpsock(cmd, cmd_sz, sock);
+        check(bytes >= 0, "nserve: slurpsock failed");
 
-    // Quit immediately if cmd size is too large.
-    if (rc == 1) {
-        goto error;
-    }
+        err = check_cmd(cmd);
+        if (err != NULL) {
+            // cmd invalid; quit.
+            rc = barfsock(err, strlen(err), sock);
+            check(rc != -1, "barfsock failed");
 
-    // Write response to socket.
-    rc = barfsock(cmd, bytes, sock);
-    check(rc != -1, "nserve: echo failed");
+            break;
+        }
+
+        // Write response to socket.
+        rc = barfsock(cmd, bytes, sock);
+        check(rc != -1, "nserve: echo failed");
+    } while(1);
 
     // Close socket.
     rc = close(sock);
