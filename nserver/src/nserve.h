@@ -9,7 +9,6 @@
 #include <bstrlib.h>
 #include <ncmd.h>
 #include <dbg.h>
-#include <ringbuffer.h>
 
 void nserve(int sock);
 
