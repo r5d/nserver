@@ -45,7 +45,6 @@ int check_cmd_size(char *cmd, int sock)
     check(cmd != NULL, "cmd is NULL");
 
     size_t len = strlen(cmd);
-    debug("cmd size $%s$ %ld\n", cmd, len);
     if (len >= CMD_MIN_SIZE && len <= CMD_MAX_SIZE) {
         return 0;
     } else if (len == 0) {
