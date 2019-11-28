@@ -4,12 +4,17 @@ int sanitize(char *cmd)
 {
     check(cmd != NULL, "cmd is NULL");
 
-    size_t len = strlen(cmd);
+    int len = strlen(cmd);
     check(len > 0, "cmd empty");
 
-    // strip newline character at the end.
-    cmd[len - 1] = '\0';
+    // replace newline character with NUL.
+    for (int i = 0; i < len; i++) {
+        if (cmd[i] == '\n') {
+            cmd[i] = '\0';
 
+            break;
+        }
+    }
     return 0;
  error:
     return -1;
