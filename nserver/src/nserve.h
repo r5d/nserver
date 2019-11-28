@@ -7,11 +7,9 @@
 #include <sys/socket.h>
 
 #include <bstrlib.h>
+#include <ncmd.h>
 #include <dbg.h>
 #include <ringbuffer.h>
-
-#define CMD_MIN_SIZE 5
-#define CMD_MAX_SIZE 120
 
 void nserve(int sock);
 
