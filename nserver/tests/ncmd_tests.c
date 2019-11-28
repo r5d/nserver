@@ -88,7 +88,6 @@ char *test_check_cmd()
 
     err = check_cmd(cmd);
     mu_assert(err != NULL, "check_cmd failed");
-    printf("ERR %s", err);
     mu_assert(strcmp(err, "closing connection\n") == 0,
               "wrong err msg");
 
