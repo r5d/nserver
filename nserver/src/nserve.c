@@ -45,13 +45,18 @@ int check_cmd_size(char *cmd, int sock)
     check(cmd != NULL, "cmd is NULL");
 
     size_t len = strlen(cmd);
-    if (len <= CMD_SIZE) {
+    debug("cmd size $%s$ %ld\n", cmd, len);
+    if (len >= CMD_MIN_SIZE && len <= CMD_MAX_SIZE) {
         return 0;
+    } else if (len == 0) {
+        char *q = "closing connection\n";
+        size_t bytes = barfsock(q, strlen(q), sock);
+        check(bytes == strlen(q), "send sock failed");
+    } else {
+        char *err = "cmd size invalid\n";
+        size_t bytes = barfsock(err, strlen(err), sock);
+        check(bytes == strlen(err), "send sock failed");
     }
-
-    char *err = "error: command invalid: size > 120 characters\n";
-    size_t bytes = barfsock(err, strlen(err), sock);
-    check(bytes == strlen(err), "check_cmd_size: send failed");
 
     return 1;
  error:

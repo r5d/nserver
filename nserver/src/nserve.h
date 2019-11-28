@@ -10,7 +10,8 @@
 #include <dbg.h>
 #include <ringbuffer.h>
 
-#define CMD_SIZE 120
+#define CMD_MIN_SIZE 5
+#define CMD_MAX_SIZE 120
 
 void nserve(int sock);
 
