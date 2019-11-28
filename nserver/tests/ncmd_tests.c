@@ -46,6 +46,10 @@ char *test_sanitize()
     mu_assert(strlen(cmd) == c_cmd_sz - 20, "sanitize failed");
     mu_assert(strcmp(cmd, "/create api/bacon") == 0, "sanitize failed");
 
+
+    // Cleanup.
+    free(cmd);
+
     return NULL;
 }
 
