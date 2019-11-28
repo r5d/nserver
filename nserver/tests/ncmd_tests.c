@@ -53,11 +53,64 @@ char *test_sanitize()
     return NULL;
 }
 
+char *test_check_cmd()
+{
+    char *cmd = calloc(128, sizeof(char));
+    mu_assert(cmd != NULL, "calloc failed");
+
+    char *bacon = "/create api/bacon";
+    strncpy(cmd, bacon, strlen(bacon));
+    mu_assert(strlen(cmd) == strlen(bacon), "strncpy failed");
+
+    char *err = check_cmd(cmd);
+    mu_assert(err == NULL, "check_cmd failed");
+
+
+    memset(cmd, '\0', 128);
+
+
+    char *c = "/c";
+    strncpy(cmd, c, strlen(c));
+    mu_assert(strlen(cmd) == strlen(c), "strncpy failed");
+
+    err = check_cmd(cmd);
+    mu_assert(err != NULL, "check_cmd failed");
+    mu_assert(strcmp(err, "command size invalid\n") == 0,
+              "wrong err msg");
+
+
+    memset(cmd, '\0', 128);
+
+
+    char *empty = "\n";
+    strncpy(cmd, empty, strlen(empty));
+    mu_assert(strlen(cmd) == strlen(empty), "strncpy failed");
+
+    err = check_cmd(cmd);
+    mu_assert(err != NULL, "check_cmd failed");
+    printf("ERR %s", err);
+    mu_assert(strcmp(err, "closing connection\n") == 0,
+              "wrong err msg");
+
+
+    err = check_cmd(NULL);
+    mu_assert(err != NULL, "check_cmd failed");
+    mu_assert(strcmp(err, "internal error\n") == 0,
+              "wrong err msg");
+
+
+    // Cleanup.
+    free(cmd);
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
 
     mu_run_test(test_sanitize);
+    mu_run_test(test_check_cmd);
 
     return NULL;
 }
