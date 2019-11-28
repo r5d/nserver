@@ -25,6 +25,20 @@ int barfsock(char *buf, size_t buf_sz, int sock)
     return -1;
 }
 
+int sanitize(char *cmd)
+{
+    check(cmd != NULL, "cmd is NULL");
+
+    size_t len = strlen(cmd);
+    check(len > 0, "cmd empty");
+
+    // strip newline character at the end.
+    cmd[len - 1] = '\0';
+
+    return 0;
+ error:
+    return -1;
+}
 
 int check_cmd_size(char *cmd, int sock)
 {
