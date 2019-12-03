@@ -56,7 +56,7 @@ char *Stats_dump(Stats *st)
     // dump into dump str.
     int rc = snprintf(dstr, dstr_len,
                       "sum: %f, sumsq: %f, n: %ld, "
-                      "min: %f, max: %f, mean: %f, stddev: %f",
+                      "min: %f, max: %f, mean: %f, stddev: %f\n",
                       st->sum, st->sumsq, st->n, st->min, st->max,
                       Stats_mean(st), Stats_stddev(st));
     check(rc > 0, "stats dump failed");
