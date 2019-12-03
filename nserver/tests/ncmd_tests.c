@@ -152,7 +152,19 @@ char *test_find_function()
     funk = find_function(parts);
     mu_assert(funk == NS_CREATE, "find function create failed");
 
+    ham = "/CREate        ham";
+    parts = cmd_parts(ham);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_CREATE, "find function create failed");
+
     char *sample = "/sample bacon 42";
+    parts = cmd_parts(sample);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_SAMPLE, "find function sample failed");
+
+    sample = "/SAMPLE bacon 42";
     parts = cmd_parts(sample);
     mu_assert(parts != NULL, "cmd_parts failed");
     funk = find_function(parts);
@@ -181,6 +193,18 @@ char *test_find_function()
     mu_assert(parts != NULL, "cmp_parts failed");
     funk = find_function(parts);
     mu_assert(funk == NS_LIST, "find function list failed");
+
+    list = "/LIST";
+    parts = cmd_parts(list);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_LIST, "find function list failed");
+
+    char *nop = "/meant bacon";
+    parts = cmd_parts(nop);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_NOP, "find function mean failed");
 
     return NULL;
 }
