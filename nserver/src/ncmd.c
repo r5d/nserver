@@ -151,3 +151,20 @@ int find_function(struct bstrList *cmd_parts)
     return NS_NOP;
 }
 
+int check_args(struct bstrList *cmd_parts, int argc)
+{
+    check(cmd_parts != NULL, "cmd_parts is NULL");
+    check(cmd_parts->qty == argc, "qty check failed");
+
+    bstring part = NULL;
+    for (int i = 0; i < argc; i++) {
+        part = cmd_parts->entry[i];
+
+        check(blength(part) > 0, "part %d empty", i);
+    }
+
+    return 0;
+ error:
+    return -1;
+}
+
