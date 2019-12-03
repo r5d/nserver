@@ -120,28 +120,16 @@ int find_function(struct bstrList *cmd_parts)
 
     // find function for cmd_name
     if (bstricmp(cmd_name, &fcreate) == 0) {
-        check(cmd_parts->qty == 2, "cmd invalid");
-
         return NS_CREATE;
     } else if (bstricmp(cmd_name, &fsample) == 0) {
-        check(cmd_parts->qty == 3, "cmd invalid");
-
         return NS_SAMPLE;
     } else if (bstricmp(cmd_name, &fmean) == 0) {
-        check(cmd_parts->qty == 2, "cmd invalid");
-
         return NS_MEAN;
     } else if (bstricmp(cmd_name, &fdump) == 0) {
-        check(cmd_parts->qty == 2, "cmd invalid");
-
         return NS_DUMP;
     } else if (bstricmp(cmd_name, &fdelete) == 0) {
-        check(cmd_parts->qty == 2, "cmd invalid");
-
         return NS_DELETE;
     } else if (bstricmp(cmd_name, &flist) == 0) {
-        check(cmd_parts->qty == 1, "cmd invalid");
-
         return NS_LIST;
     } else {
         return NS_NOP;
