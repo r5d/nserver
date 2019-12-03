@@ -5,6 +5,7 @@
 
 #include <bstrlib.h>
 #include <dbg.h>
+#include <protocol.h>
 
 #define CMD_MIN_SIZE 5
 #define CMD_MAX_SIZE 120
@@ -24,6 +25,7 @@ char *check_cmd(char *cmd);
 
 struct bstrList *cmd_parts(char *cmd);
 int find_function(struct bstrList *cmd_parts);
+char *call_function(int func, struct bstrList *cmd_parts);
 
 
 #endif

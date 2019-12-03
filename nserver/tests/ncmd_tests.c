@@ -209,6 +209,70 @@ char *test_find_function()
     return NULL;
 }
 
+char *test_call_function()
+{
+    struct bstrList *parts = NULL;
+    char *msg = 0;
+
+    char *bacon = "/create bacon";
+    parts = cmd_parts(bacon);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_CREATE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *ham = "/create ham";
+    parts = cmd_parts(ham);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_CREATE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *beef = "/create beef";
+    parts = cmd_parts(beef);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_CREATE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *bacon_sample = "/sample bacon 4.2";
+    parts = cmd_parts(bacon_sample);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_SAMPLE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    bacon_sample = "/Sample bacon 6.9";
+    parts = cmd_parts(bacon_sample);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_SAMPLE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *bacon_mean = "/mean bacon";
+    parts = cmd_parts(bacon_mean);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_MEAN, parts);
+    mu_assert(strcmp(msg, "Mean: 5.55\n") == 0, "call function failed");
+
+    char *bacon_dump = "/dump bacon";
+    parts = cmd_parts(bacon_dump);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_DUMP, parts);
+    mu_assert(strcmp(msg, "sum: 11.100000, sumsq: 65.250000, n: 2, min: 4.200000, max: 6.900000, mean: 5.550000, stddev: 1.909188\n") == 0, "call function failed");
+
+    char *bacon_delete = "/delete bacon";
+    parts = cmd_parts(bacon_delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_DELETE, parts);
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *list = "/list";
+    parts = cmd_parts(list);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    msg = call_function(NS_LIST, parts);
+    mu_assert(strcmp(msg, "ham\nbeef\n") == 0
+              || strcmp(msg, "beef\nham\n") == 0,
+              "call function failed");
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
@@ -217,6 +281,7 @@ char *all_tests()
     mu_run_test(test_check_cmd);
     mu_run_test(test_cmd_parts);
     mu_run_test(test_find_function);
+    mu_run_test(test_call_function);
 
     return NULL;
 }
