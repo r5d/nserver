@@ -156,105 +156,116 @@ int check_args(struct bstrList *cmd_parts, int argc)
     return -1;
 }
 
-/**
- * TODO:
- * - msg needs to be dynamically allocated.
- * - error msgs need to be consistent.
- */
 char *call_function(int func, struct bstrList *cmd_parts)
 {
     char *msg = NULL;
+    int msg_sz = 200;
+    msg = (char *) calloc(msg_sz + 1, sizeof(char));
+    check_mem(msg);
+
     if (func < 0 || cmd_parts == NULL || cmd_parts->qty < 1) {
-        msg = "function call failed: internal error";
+        strncpy(msg, "error: args invalid\n", msg_sz);
 
         return msg;
     }
 
-    int rc = 0;
     switch (func) {
     case NS_CREATE:
         if(check_args(cmd_parts, 2) != 0) {
-            msg = "create failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
         if (sscreate(bdata(cmd_parts->entry[1])) != 0) {
-            msg = "create failed: internal error";
+            strncpy(msg, "error: create failed\n", msg_sz);
             break;
         }
-        msg = "OK\n";
+        strncpy(msg, "OK\n", msg_sz);
 
         break;
     case NS_SAMPLE:
         if(check_args(cmd_parts, 3) != 0) {
-            msg = "sample failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
 
         double sample = strtod(bdata(cmd_parts->entry[2]), NULL);
         if (sssample(bdata(cmd_parts->entry[1]), sample) != 0) {
-            msg = "sample failed: internal error";
+            strncpy(msg, "error: sample failed\n", msg_sz);
             break;
         }
-        msg = "OK\n";
+        strncpy(msg, "OK\n", msg_sz);
 
         break;
     case NS_MEAN:
         if(check_args(cmd_parts, 2) != 0) {
-            msg = "mean failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
 
         double mean = ssmean(bdata(cmd_parts->entry[1]));
         if (mean < 0) {
-            msg = "mean failed: internal error";
+            strncpy(msg, "error: mean failed\n", msg_sz);
             break;
         }
-        msg = (char *) calloc(20, sizeof(char));
         if (sprintf(msg, "Mean: %.2f\n", mean) < 0) {
-            msg = "mean failed: internal error";
+            strncpy(msg, "error: mean failed\n", msg_sz);
         }
         break;
     case NS_DUMP:
         if(check_args(cmd_parts, 2) != 0) {
-            msg = "dump failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
 
         char *dump = ssdump(bdata(cmd_parts->entry[1]));
         if (dump == NULL) {
-            msg = "dump failed: internal error";
+            strncpy(msg, "error: dump failed\n", msg_sz);
             break;
         }
+
+        // Clean up msg.
+        free(msg);
+
         msg = dump;
         break;
     case NS_DELETE:
         if(check_args(cmd_parts, 2) != 0) {
-            msg = "delete failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
 
         if (ssdelete(bdata(cmd_parts->entry[1])) != 0) {
-            msg = "delete failed: internal error";
+            strncpy(msg, "error: delete failed\n", msg_sz);
             break;
         }
-        msg = "OK\n";
+        strncpy(msg, "OK\n", msg_sz);
 
         break;
     case NS_LIST:
         if(check_args(cmd_parts, 1) != 0) {
-            msg = "list failed: command invalid\n";
+            strncpy(msg, "error: command invalid\n", msg_sz);
             break;
         }
 
-        msg = sslist();
-        if (msg == NULL) {
-            msg = "list failed: internal error";
+        char *list = sslist();
+        if (list == NULL) {
+            strncpy(msg, "error: list failed\n", msg_sz);
+            break;
         }
+
+        // Clean up msg.
+        free(msg);
+
+        msg = list;
         break;
     default:
-        msg = "error: function not found";
+        strncpy(msg, "error: function not found\n", msg_sz);
         break;
     }
 
     return msg;
+ error:
+    return NULL;
+}
+
 }
