@@ -156,116 +156,148 @@ int check_args(struct bstrList *cmd_parts, int argc)
     return -1;
 }
 
-char *call_function(int func, struct bstrList *cmd_parts)
+int call_function(int func, struct bstrList *cmd_parts, char *out)
 {
-    char *msg = NULL;
-    int msg_sz = 200;
-    msg = (char *) calloc(msg_sz + 1, sizeof(char));
-    check_mem(msg);
+    check(out != NULL, "out invalid");
 
     if (func < 0 || cmd_parts == NULL || cmd_parts->qty < 1) {
-        strncpy(msg, "error: args invalid\n", msg_sz);
+        strncpy(out, "error: args invalid\n", RSP_SIZE);
 
-        return msg;
+        return -1;
     }
 
     switch (func) {
     case NS_CREATE:
         if(check_args(cmd_parts, 2) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
         if (sscreate(bdata(cmd_parts->entry[1])) != 0) {
-            strncpy(msg, "error: create failed\n", msg_sz);
-            break;
+            strncpy(out, "error: create failed\n", RSP_SIZE);
+
+            return -1;
         }
-        strncpy(msg, "OK\n", msg_sz);
+        strncpy(out, "OK\n", RSP_SIZE);
 
         break;
     case NS_SAMPLE:
         if(check_args(cmd_parts, 3) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
 
         double sample = strtod(bdata(cmd_parts->entry[2]), NULL);
         if (sssample(bdata(cmd_parts->entry[1]), sample) != 0) {
-            strncpy(msg, "error: sample failed\n", msg_sz);
-            break;
+            strncpy(out, "error: sample failed\n", RSP_SIZE);
+
+            return -1;
         }
-        strncpy(msg, "OK\n", msg_sz);
+        strncpy(out, "OK\n", RSP_SIZE);
 
         break;
     case NS_MEAN:
         if(check_args(cmd_parts, 2) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
 
         double mean = ssmean(bdata(cmd_parts->entry[1]));
         if (mean < 0) {
-            strncpy(msg, "error: mean failed\n", msg_sz);
-            break;
+            strncpy(out, "error: mean failed\n", RSP_SIZE);
+
+            return -1;
         }
-        if (sprintf(msg, "Mean: %.2f\n", mean) < 0) {
-            strncpy(msg, "error: mean failed\n", msg_sz);
+        if (sprintf(out, "Mean: %.2f\n", mean) < 0) {
+            strncpy(out, "error: mean failed\n", RSP_SIZE);
+
+            return -1;
         }
         break;
     case NS_DUMP:
         if(check_args(cmd_parts, 2) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
 
         char *dump = ssdump(bdata(cmd_parts->entry[1]));
         if (dump == NULL) {
-            strncpy(msg, "error: dump failed\n", msg_sz);
-            break;
+            strncpy(out, "error: dump failed\n", RSP_SIZE);
+
+            return -1;
         }
+        strncpy(out, dump, RSP_SIZE);
 
-        // Clean up msg.
-        free(msg);
+        // Clean up dump
+        free(dump);
 
-        msg = dump;
         break;
     case NS_DELETE:
         if(check_args(cmd_parts, 2) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
 
         if (ssdelete(bdata(cmd_parts->entry[1])) != 0) {
-            strncpy(msg, "error: delete failed\n", msg_sz);
-            break;
+            strncpy(out, "error: delete failed\n", RSP_SIZE);
+
+            return -1;
         }
-        strncpy(msg, "OK\n", msg_sz);
+        strncpy(out, "OK\n", RSP_SIZE);
 
         break;
     case NS_LIST:
         if(check_args(cmd_parts, 1) != 0) {
-            strncpy(msg, "error: command invalid\n", msg_sz);
-            break;
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
         }
 
         char *list = sslist();
         if (list == NULL) {
-            strncpy(msg, "error: list failed\n", msg_sz);
-            break;
+            strncpy(out, "error: list failed\n", RSP_SIZE);
+
+            return -1;
         }
+        strncpy(out, list, RSP_SIZE);
 
-        // Clean up msg.
-        free(msg);
+        // Clean up list.
+        free(list);
 
-        msg = list;
         break;
     default:
-        strncpy(msg, "error: function not found\n", msg_sz);
-        break;
+        strncpy(out, "error: function not found\n", RSP_SIZE);
+
+        return -1;
     }
 
-    return msg;
+    return 0;
  error:
-    return NULL;
+    return -1;
 }
 
+/*
+int process(char *cmd, int sock)
+{
+    // split cmd into parts.
+    struct bstrList *parts = cmd_parts(cmd);
+    check(parts != NULL, "cmd_parts failed");
+    check(parts->qty > 0, "bstrList qty check failed");
+
+    // call find_function.
+
+    // call call_function
+
+    // barf result back to sock
+
+    // done
+
+    return 0;
+ error:
+    return -1;
 }
+*/

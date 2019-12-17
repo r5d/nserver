@@ -9,6 +9,7 @@
 
 #define CMD_MIN_SIZE 5
 #define CMD_MAX_SIZE 120
+#define RSP_SIZE 200
 
 enum FUNCTIONS {
                 NS_CREATE,
@@ -24,8 +25,10 @@ int sanitize(char *cmd);
 char *check_cmd(char *cmd);
 
 struct bstrList *cmd_parts(char *cmd);
-int find_function(struct bstrList *cmd_parts);
-char *call_function(int func, struct bstrList *cmd_parts);
 
+int find_function(struct bstrList *cmd_parts);
+int call_function(int func, struct bstrList *cmd_parts, char *out);
+
+int process(char *cmd, int sock);
 
 #endif
