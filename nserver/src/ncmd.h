@@ -29,6 +29,6 @@ struct bstrList *cmd_parts(char *cmd);
 int find_function(struct bstrList *cmd_parts);
 int call_function(int func, struct bstrList *cmd_parts, char *out);
 
-int process(char *cmd, int sock);
+int process(char *cmd, char *out);
 
 #endif

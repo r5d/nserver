@@ -280,8 +280,7 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
     return -1;
 }
 
-/*
-int process(char *cmd, int sock)
+int process(char *cmd, char *out)
 {
     // split cmd into parts.
     struct bstrList *parts = cmd_parts(cmd);
@@ -289,15 +288,15 @@ int process(char *cmd, int sock)
     check(parts->qty > 0, "bstrList qty check failed");
 
     // call find_function.
+    int FUNC = find_function(parts);
+    check(FUNC != -1, "find function failed");
 
     // call call_function
-
-    // barf result back to sock
-
-    // done
+    int rc = call_function(FUNC, parts, out);
+    check(rc != -1, "call function failed");
 
     return 0;
  error:
     return -1;
 }
-*/
+

@@ -299,6 +299,61 @@ char *test_call_function()
     return NULL;
 }
 
+char *test_process()
+{
+    char *out = (char *) calloc(RSP_SIZE + 1, sizeof(char));
+    mu_assert(out != NULL, "out invalid");
+
+    char *bacon = "/create bacon";
+    int rc = process(bacon, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *ham = "/create ham";
+    rc = process(ham, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *beef = "/create beef";
+    rc = process(beef, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *bacon_sample = "/sample bacon 4.2";
+    rc = process(bacon_sample, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    bacon_sample = "/Sample bacon 6.9";
+    rc = process(bacon_sample, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *bacon_mean = "/mean bacon";
+    rc = process(bacon_mean, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "Mean: 5.55\n") == 0, "process failed");
+
+    char *bacon_dump = "/dump bacon";
+    rc = process(bacon_dump, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "sum: 11.100000, sumsq: 65.250000, n: 2, min: 4.200000, max: 6.900000, mean: 5.550000, stddev: 1.909188\n") == 0, "process failed");
+
+    char *bacon_delete = "/delete bacon";
+    rc = process(bacon_delete, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *list = "/list";
+    rc = process(list, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "ham\nbeef\n") == 0
+              || strcmp(out, "beef\nham\n") == 0,
+              "process failed");
+
+    return NULL;
+}
+
 char *all_tests()
 {
     mu_suite_start();
@@ -308,6 +363,7 @@ char *all_tests()
     mu_run_test(test_cmd_parts);
     mu_run_test(test_find_function);
     mu_run_test(test_call_function);
+    mu_run_test(test_process);
 
     return NULL;
 }
