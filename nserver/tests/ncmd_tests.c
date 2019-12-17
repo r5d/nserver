@@ -281,6 +281,21 @@ char *test_call_function()
               || strcmp(msg, "beef\nham\n") == 0,
               "call function failed");
 
+    // delete ham and beef.
+    char *ham_delete = "/delete ham";
+    parts = cmd_parts(ham_delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_DELETE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *beef_delete = "/delete beef";
+    parts = cmd_parts(beef_delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_DELETE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
     return NULL;
 }
 
