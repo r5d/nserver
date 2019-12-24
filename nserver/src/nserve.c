@@ -27,24 +27,26 @@ int barfsock(char *buf, size_t buf_sz, int sock)
 
 void nserve(int sock)
 {
-    size_t cmd_sz = 200;
-    char *cmd = calloc(sizeof(char), cmd_sz);
+    char *out = (char *) calloc(sizeof(char), RSP_SIZE + 1);
+    check_mem(out);
+
+    char *cmd = (char *) calloc(sizeof(char), CMD_MAX_SIZE  + 1);
     check_mem(cmd);
 
     int rc = 0;
-    char *err = NULL;
     do {
-        // clear cmd.
-        memset(cmd, '\0', cmd_sz);
+        // clear out, cmd.
+        memset(out, '\0', RSP_SIZE + 1);
+        memset(cmd, '\0', CMD_MAX_SIZE + 1);
 
         // Read command from socket.
-        ssize_t bytes = slurpsock(cmd, cmd_sz, sock);
+        ssize_t bytes = slurpsock(cmd, CMD_MAX_SIZE, sock);
         check(bytes >= 0, "nserve: slurpsock failed");
 
-        err = check_cmd(cmd);
-        if (err != NULL) {
+        rc = check_cmd(cmd, out);
+        if (rc < 0) {
             // cmd invalid; quit.
-            rc = barfsock(err, strlen(err), sock);
+            rc = barfsock(out, strlen(out), sock);
             check(rc != -1, "barfsock failed");
 
             break;
