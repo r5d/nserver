@@ -283,6 +283,11 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
 
 int process(char *cmd, char *out)
 {
+    check(out, "out invalid");
+
+    int rc = check_cmd(cmd, out);
+    check(rc == 0, "cmd check failed");
+
     // split cmd into parts.
     struct bstrList *parts = cmd_parts(cmd);
     check(parts != NULL, "cmd_parts failed");
@@ -293,7 +298,7 @@ int process(char *cmd, char *out)
     check(FUNC != -1, "find function failed");
 
     // call call_function
-    int rc = call_function(FUNC, parts, out);
+    rc = call_function(FUNC, parts, out);
     check(rc != -1, "call function failed");
 
     return 0;
