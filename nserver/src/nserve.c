@@ -33,7 +33,7 @@ void nserve(int sock)
     char *cmd = (char *) calloc(sizeof(char), CMD_MAX_SIZE  + 1);
     check_mem(cmd);
 
-    int rc = 0;
+    int rc = 0, done = 0;
     do {
         // clear out, cmd.
         memset(out, '\0', RSP_SIZE + 1);
@@ -43,19 +43,15 @@ void nserve(int sock)
         ssize_t bytes = slurpsock(cmd, CMD_MAX_SIZE, sock);
         check(bytes >= 0, "nserve: slurpsock failed");
 
-        rc = check_cmd(cmd, out);
+        rc = process(cmd, out);
         if (rc < 0) {
-            // cmd invalid; quit.
-            rc = barfsock(out, strlen(out), sock);
-            check(rc != -1, "barfsock failed");
-
-            break;
+            done = 1;
         }
 
         // Write response to socket.
-        rc = barfsock(cmd, bytes, sock);
+        rc = barfsock(out, strlen(out), sock);
         check(rc != -1, "nserve: echo failed");
-    } while(1);
+    } while(done != 1);
 
     // Close socket.
     rc = close(sock);
