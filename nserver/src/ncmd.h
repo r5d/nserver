@@ -22,7 +22,7 @@ enum FUNCTIONS {
 };
 
 int sanitize(char *cmd);
-char *check_cmd(char *cmd);
+int check_cmd(char *cmd, char *err);
 
 struct bstrList *cmd_parts(char *cmd);
 

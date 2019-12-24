@@ -20,10 +20,9 @@ int sanitize(char *cmd)
     return -1;
 }
 
-char *check_cmd(char *cmd)
+int check_cmd(char *cmd, char *err)
 {
-    char *err = NULL;
-
+    check_mem(err);
     check(cmd != NULL, "cmd is NULL");
 
     int rc = sanitize(cmd);
@@ -31,19 +30,21 @@ char *check_cmd(char *cmd)
 
     size_t len = strlen(cmd);
     if (len >= CMD_MIN_SIZE && len <= CMD_MAX_SIZE) {
-        return NULL;
+        return 0;
     }
 
     if (len == 0) {
-        err = "closing connection\n";
+        strncpy(err, "closing connection\n", RSP_SIZE);
+        return -1;
     } else {
-        err = "command size invalid\n";
+        strncpy(err, "command size invalid\n", RSP_SIZE);
+        return -1;
     }
 
-    return err;
+    return 0;
  error:
-    err = "internal error\n";
-    return err;
+    strncpy(err, "internal error\n", RSP_SIZE);
+    return -1;
 }
 
 
