@@ -244,14 +244,14 @@ char *test_call_function()
     mu_assert(parts != NULL, "cmd_parts failed");
     rc = call_function(NS_SAMPLE, parts, msg);
     mu_assert(rc == 0, "call function failed");
-    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+    mu_assert(strcmp(msg, "Mean: 4.20\n") == 0, "call function failed");
 
     bacon_sample = "/Sample bacon 6.9";
     parts = cmd_parts(bacon_sample);
     mu_assert(parts != NULL, "cmd_parts failed");
     rc = call_function(NS_SAMPLE, parts, msg);
     mu_assert(rc == 0, "call function failed");
-    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+    mu_assert(strcmp(msg, "Mean: 5.55\n") == 0, "call function failed");
 
     char *bacon_mean = "/mean bacon";
     parts = cmd_parts(bacon_mean);
@@ -324,12 +324,12 @@ char *test_process()
     char *bacon_sample = "/sample bacon 4.2";
     rc = process(bacon_sample, out);
     mu_assert(rc == 0, "process failed");
-    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+    mu_assert(strcmp(out, "Mean: 4.20\n") == 0, "process failed");
 
     bacon_sample = "/Sample bacon 6.9";
     rc = process(bacon_sample, out);
     mu_assert(rc == 0, "process failed");
-    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+    mu_assert(strcmp(out, "Mean: 5.55\n") == 0, "process failed");
 
     char *bacon_mean = "/mean bacon";
     rc = process(bacon_mean, out);

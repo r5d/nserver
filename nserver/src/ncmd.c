@@ -167,6 +167,7 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
         return -1;
     }
 
+    double mean = 0.0;
     switch (func) {
     case NS_CREATE:
         if(check_args(cmd_parts, 2) != 0) {
@@ -190,13 +191,17 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
         }
 
         double sample = strtod(bdata(cmd_parts->entry[2]), NULL);
-        if (sssample(bdata(cmd_parts->entry[1]), sample) != 0) {
+        mean = sssample(bdata(cmd_parts->entry[1]), sample);
+        if (mean < 0) {
             strncpy(out, "error: sample failed\n", RSP_SIZE);
 
             return -1;
         }
-        strncpy(out, "OK\n", RSP_SIZE);
+        if (sprintf(out, "Mean: %.2f\n", mean) < 0) {
+            strncpy(out, "error: sample failed\n", RSP_SIZE);
 
+            return -1;
+        }
         break;
     case NS_MEAN:
         if(check_args(cmd_parts, 2) != 0) {
@@ -205,7 +210,7 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
             return -1;
         }
 
-        double mean = ssmean(bdata(cmd_parts->entry[1]));
+        mean = ssmean(bdata(cmd_parts->entry[1]));
         if (mean < 0) {
             strncpy(out, "error: mean failed\n", RSP_SIZE);
 
