@@ -64,7 +64,7 @@ int ssdelete(char *key)
     return -1;
 }
 
-int sssample(char *key, double s)
+double sssample(char *key, double s)
 {
     check(hash != NULL, "hash not initialized");
 
@@ -79,7 +79,10 @@ int sssample(char *key, double s)
     // 3. sample!
     Stats_sample(st, s);
 
-    return 0;
+    // 4. get mean.
+    double m = Stats_mean(st);
+
+    return m;
  error:
     return -1;
 }

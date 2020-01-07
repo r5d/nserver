@@ -16,28 +16,28 @@ char *test_sscreate()
 
 char *test_sssample()
 {
-    int rc = 0;
+    double mean = 0;
 
-    rc = sssample("crimson", 3);
-    mu_assert(rc == 0, "sssample failed 0");
+    mean = sssample("crimson", 3);
+    mu_assert(mean == 3.0, "sssample failed 0");
 
-    rc = sssample("crimson", 9);
-    mu_assert(rc == 0, "sssample failed 1");
+    mean = sssample("crimson", 9);
+    mu_assert(mean == 6.0, "sssample failed 1");
 
-    rc = sssample("crimson", 12);
-    mu_assert(rc == 0, "sssample failed 2");
+    mean = sssample("crimson", 12);
+    mu_assert(mean == 8.0, "sssample failed 2");
 
-    rc = sssample("/vermilion", 20);
-    mu_assert(rc == 0, "sssample failed 3");
+    mean = sssample("/vermilion", 20);
+    mu_assert(mean == 20.0, "sssample failed 3");
 
-    rc = sssample("/vermilion", 27);
-    mu_assert(rc == 0, "sssample failed 4");
+    mean = sssample("/vermilion", 27);
+    mu_assert(mean == 23.5, "sssample failed 4");
 
-    rc = sssample("/vermilion", 4);
-    mu_assert(rc == 0, "sssample failed 5");
+    mean = sssample("/vermilion", 4);
+    mu_assert(mean == 17.0, "sssample failed 5");
 
-    rc = sssample("/ruby", 48);
-    mu_assert(rc == -1, "sssample failed 6");
+    mean = sssample("/ruby", 48);
+    mu_assert(mean == -1, "sssample failed 6");
 
     return NULL;
 }

@@ -10,7 +10,7 @@
 
 int sscreate(char *key);
 int ssdelete(char *key);
-int sssample(char *key, double s);
+double sssample(char *key, double s);
 double ssmean(char *key);
 char *ssdump(char *key);
 char *sslist();
