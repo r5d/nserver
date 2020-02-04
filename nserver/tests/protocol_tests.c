@@ -5,11 +5,14 @@ char *test_sscreate()
 {
     int rc = 0;
 
-    rc = sscreate("crimson");
+    rc = sscreate("/crimson");
     mu_assert(rc == 0, "sscreate failed 0");
 
     rc = sscreate("/vermilion");
     mu_assert(rc == 0, "sscreate failed 1");
+
+    rc = sscreate("/crimson");
+    mu_assert(rc == 1, "sscreate failed 2");
 
     return NULL;
 }
