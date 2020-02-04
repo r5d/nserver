@@ -1,36 +1,46 @@
 #include <protocol.h>
 
 static Hashmap *hash;
-
-int ssinit()
-{
-    if (hash == NULL) {
-        hash = Hashmap_create(NULL, NULL);
-        check(hash != NULL, "unable to create hashmap");
-    }
-
-    return 0;
- error:
-    return -1;
-}
+static TSTree *tst;
 
 int sscreate(char *key)
 {
-    int rc = 0;
+    check(key != NULL || strlen(key) < 1, "key invalid");
 
-    check(ssinit() == 0, "ssinit failed");
+    // 1. Check if key is already in the tree.
+    Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
 
-    // 1. create bstring from 'key'.
+    // If it's already there; there's nothing to do.
+    if (rec != NULL && rec-> deleted == 0) {
+        return 1;
+    }
+    // If it's already there and deleted, undelete it.
+    if (rec != NULL && rec->deleted == 1) {
+        rec->deleted = 0;
+
+        return 2;
+    }
+
+    // 2. Create bstring from 'key'.
     bstring k = bfromcstr(key);
     check(k != NULL, "key creation failed");
 
-    // 2. allocate fresh Stats.
+    // 3. Allocate fresh Stats.
     Stats *st = Stats_create();
     check(st != NULL, "stats creation failed");
 
-    // 3. add to hashmap.
-    rc = Hashmap_set(hash, k, st);
-    check(rc == 0, "hashmap set failed");
+    // 4. Create Record.
+    rec = (Record *) calloc(1, sizeof(Record));
+    check_mem(rec);
+
+    // 5. Initialize Record.
+    rec->key = k;
+    rec->st = st;
+    rec->deleted = 0;
+
+    // 6. Add Record to tree.
+    tst = TSTree_insert(tst, key, strlen(key), rec);
+    check(tst != NULL, "tstree insert failed");
 
     return 0;
  error:
