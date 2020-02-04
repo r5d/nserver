@@ -6,6 +6,7 @@
 #include <darray.h>
 #include <hashmap.h>
 #include <stats.h>
+#include <tstree.h>
 #include <dbg.h>
 
 typedef struct Record {
