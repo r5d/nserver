@@ -110,7 +110,11 @@ double sssample(char *key, double s)
     // 2. Sample!
     Stats_sample(rec->st, s);
 
-    // 3. Get mean.
+    // 3. Sample parent!
+    int rc = ssample_parent(key, s);
+    check(rc >= 0, "sampling parent failed");
+
+    // 4. Get mean.
     double m = Stats_mean(rec->st);
 
     return m;

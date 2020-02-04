@@ -14,6 +14,9 @@ char *test_sscreate()
     rc = sscreate("/crimson");
     mu_assert(rc == 1, "sscreate failed 2");
 
+    rc = sscreate("/crimson/sky");
+    mu_assert(rc == 0, "sscreate failed 3");
+
     return NULL;
 }
 
@@ -41,6 +44,12 @@ char *test_sssample()
 
     mean = sssample("/ruby", 48);
     mu_assert(mean == -1, "sssample failed 6");
+
+    mean = sssample("/crimson/sky", 42);
+    mu_assert(mean == 42.0, "sssample failed 7");
+
+    mean = sssample("/crimson", 10);
+    mu_assert(mean == 15.20, "sssample failed 8");
 
     return NULL;
 }
