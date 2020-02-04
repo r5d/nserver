@@ -18,13 +18,13 @@ char *test_sssample()
 {
     double mean = 0;
 
-    mean = sssample("crimson", 3);
+    mean = sssample("/crimson", 3);
     mu_assert(mean == 3.0, "sssample failed 0");
 
-    mean = sssample("crimson", 9);
+    mean = sssample("/crimson", 9);
     mu_assert(mean == 6.0, "sssample failed 1");
 
-    mean = sssample("crimson", 12);
+    mean = sssample("/crimson", 12);
     mu_assert(mean == 8.0, "sssample failed 2");
 
     mean = sssample("/vermilion", 20);
