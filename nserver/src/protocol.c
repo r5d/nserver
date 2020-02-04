@@ -74,6 +74,28 @@ int ssdelete(char *key)
     return -1;
 }
 
+int ssample_parent(char *key, double s)
+{
+    check(key != NULL || strlen(key) < 1, "key invalid");
+    check(tst != NULL, "tstree not initialized");
+
+    // 1. Try to get Record with key prefix.
+    Record *rec = (Record *) TSTree_search_prefix(tst, key, strlen(key));
+
+    if (rec == NULL) {
+        // No record with key prefix.
+        return 0;
+    }
+    check(rec->st != NULL, "record's st invalid");
+
+    // 2. Sample!
+    Stats_sample(rec->st, s);
+
+    return 1;
+ error:
+    return -1;
+}
+
 double sssample(char *key, double s)
 {
     check(key != NULL || strlen(key) < 1, "key invalid");
