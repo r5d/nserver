@@ -74,7 +74,7 @@ int ssdelete(char *key)
     return -1;
 }
 
-int ssample_parent(char *key, double s)
+int sssample_parent(char *key, double s)
 {
     check(key != NULL || strlen(key) < 1, "key invalid");
     check(tst != NULL, "tstree not initialized");
@@ -111,7 +111,7 @@ double sssample(char *key, double s)
     Stats_sample(rec->st, s);
 
     // 3. Sample parent!
-    int rc = ssample_parent(key, s);
+    int rc = sssample_parent(key, s);
     check(rc >= 0, "sampling parent failed");
 
     // 4. Get mean.
