@@ -8,6 +8,12 @@
 #include <stats.h>
 #include <dbg.h>
 
+typedef struct Record {
+    bstring key;
+    Stats *st;
+    int deleted;
+} Record;
+
 int sscreate(char *key);
 int ssdelete(char *key);
 double sssample(char *key, double s);
