@@ -58,8 +58,8 @@ char *test_ssmean()
 {
     double m = 0;
 
-    m = ssmean("crimson");
-    mu_assert(m == 8, "ssmean failed 0");
+    m = ssmean("/crimson");
+    mu_assert(m == 15.20, "ssmean failed 0");
 
     m = ssmean("/vermilion");
     mu_assert(m == 17, "ssmean failed 1");

@@ -124,17 +124,17 @@ double sssample(char *key, double s)
 
 double ssmean(char *key)
 {
-    check(hash != NULL, "hash not initialized");
+    check(key != NULL || strlen(key) < 1, "key invalid");
+    check(tst != NULL, "tstree not initialized");
 
-    // 1. create bstring from 'key'.
-    bstring k = bfromcstr(key);
+    // 1. Try to get Record for key.
+    Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
 
-    // 2. try to get Stats for key.
-    Stats *st = (Stats *) Hashmap_get(hash, k);
-    check(st != NULL, "stats not found for key");
+    check(rec != NULL, "record not found");
+    check(rec->st != NULL, "record's st invalid");
 
-    // 3. get mean.
-    double m = Stats_mean(st);
+    // 2. Get mean.
+    double m = Stats_mean(rec->st);
 
     return m;
  error:
