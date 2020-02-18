@@ -161,43 +161,42 @@ char *ssdump(char *key)
     return NULL;
 }
 
+// meant to be used by sslist.
+void traverse_tree(void *value, void *data)
+{
+    Record *rec  = (Record *) value;
+    bstring bstr = (bstring) data;
+
+    check(rec != NULL, "Record is NULL");
+    check(bstr != NULL, "bstr is NULL");
+    check(rec->key != NULL, "Record's key is NULL");
+    check(blength(rec->key) > 0, "Record's key is an empty string");
+
+    int rc = bconcat(bstr, rec->key);
+    check(rc == BSTR_OK, "bstr key concat failed");
+
+    rc = bconchar(bstr, '\n');
+    check(rc == BSTR_OK, "bstr newline concat failed");
+
+ error:
+    return;
+}
+
+
 char *sslist()
 {
-    DArray *ks = NULL;
+    check(tst != NULL, "tstree not initialized");
 
-    check(hash != NULL, "hash not initiliazed");
-
-    // 1. Get keys.
-    ks = Hashmap_keys(hash);
-    check(ks != NULL, "error getting keys");
-
+    // 1. Create "accumulator" string.
     bstring ks_str = bfromcstr("");
     check(ks_str != NULL, "error creating keys_str");
 
-    int i, rc;
-    bstring k = NULL;
-    for (i = 0; i < DArray_count(ks); ++i) {
-        k = (bstring) DArray_get(ks, i);
-        check(k != NULL, "k at %d", i);
+    // 2. Accumulate keys into "accumulator" string.
+    TSTree_traverse(tst, traverse_tree, ks_str);
 
-        rc = bconcat(ks_str, k);
-        check(rc == BSTR_OK, "bstr key concat failed");
-
-        rc = bconchar(ks_str, '\n');
-        check(rc == BSTR_OK, "bstr newline concat failed");
-    }
-
-    // cleanup.
-    DArray_destroy(ks);
-
+    // 3. Return result.
     return bstr2cstr(ks_str, ' ');
  error:
-
-    // cleanup
-    if (ks) {
-        DArray_destroy(ks);
-    }
-
     return NULL;
 }
 

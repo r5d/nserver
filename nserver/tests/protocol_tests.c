@@ -102,9 +102,9 @@ char *test_sslist()
 {
     char *ks = sslist();
     mu_assert(ks != NULL, "sslist failed");
-    mu_assert(strlen(ks) == 19, "length check failed");
+    mu_assert(strlen(ks) == 33, "length check failed");
 
-    debug("KEYS:\n %s", ks);
+    debug("KEYS:\n%s", ks);
 
     return NULL;
 }
@@ -133,8 +133,8 @@ char *all_tests()
     mu_run_test(test_sssample);
     mu_run_test(test_ssmean);
     mu_run_test(test_ssdump);
-    /*mu_run_test(test_sslist);
-    mu_run_test(test_ssdelete);*/
+    mu_run_test(test_sslist);
+    /*mu_run_test(test_ssdelete);*/
 
     return NULL;
 }
