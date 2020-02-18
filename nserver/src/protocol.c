@@ -143,17 +143,17 @@ double ssmean(char *key)
 
 char *ssdump(char *key)
 {
-    check(hash != NULL, "hash not initialized");
+    check(key != NULL || strlen(key) < 1, "key invalid");
+    check(tst != NULL, "tstree not initialized");
 
     // 1. create bstring from 'key'.
-    bstring k = bfromcstr(key);
+    Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
 
-    // 2. try to get Stats for key.
-    Stats *st = (Stats *) Hashmap_get(hash, k);
-    check(st != NULL, "stats not found for key");
+    check(rec != NULL, "record not found");
+    check(rec->st != NULL, "stats not found for key");
 
-    // 3. get dump.
-    char *dstr = Stats_dump(st);
+    // 2. get dump.
+    char *dstr = Stats_dump(rec->st);
     check(dstr != NULL, "dump failed for key");
 
     return dstr;
