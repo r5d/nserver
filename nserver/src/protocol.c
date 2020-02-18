@@ -51,7 +51,7 @@ int ssdelete(char *key)
    check(key != NULL || strlen(key) < 1, "key invalid");
    check(tst != NULL, "tstree not initialized");
 
-   Record *rec = (Record *) TSTree_search_prefix(tst, key, strlen(key));
+   Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
    if (rec == NULL) {
        // key does not exists.
        return 0;
