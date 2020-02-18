@@ -79,6 +79,11 @@ int sssample_parent(char *key, double s)
     }
     check(rec->st != NULL, "record's st invalid");
 
+    if (rec->deleted == 1) {
+        // Record was deleted; nop.
+        return 0;
+    }
+
     // 2. Sample!
     Stats_sample(rec->st, s);
 
@@ -97,6 +102,7 @@ double sssample(char *key, double s)
 
     check(rec != NULL, "record not found");
     check(rec->st != NULL, "record's st invalid");
+    check(rec->deleted != 1, "record was deleted");
 
     // 2. Sample!
     Stats_sample(rec->st, s);
@@ -123,6 +129,7 @@ double ssmean(char *key)
 
     check(rec != NULL, "record not found");
     check(rec->st != NULL, "record's st invalid");
+    check(rec->deleted != 1, "record was deleted");
 
     // 2. Get mean.
     double m = Stats_mean(rec->st);
@@ -142,6 +149,7 @@ char *ssdump(char *key)
 
     check(rec != NULL, "record not found");
     check(rec->st != NULL, "stats not found for key");
+    check(rec->deleted != 1, "record was deleted");
 
     // 2. get dump.
     char *dstr = Stats_dump(rec->st);
@@ -159,6 +167,7 @@ void traverse_tree(void *value, void *data)
     bstring bstr = (bstring) data;
 
     check(rec != NULL, "Record is NULL");
+    check(rec->deleted != 1, "Record was deleted");
     check(bstr != NULL, "bstr is NULL");
     check(rec->key != NULL, "Record's key is NULL");
     check(blength(rec->key) > 0, "Record's key is an empty string");
