@@ -134,7 +134,7 @@ char *all_tests()
     mu_run_test(test_ssmean);
     mu_run_test(test_ssdump);
     mu_run_test(test_sslist);
-    /*mu_run_test(test_ssdelete);*/
+    mu_run_test(test_ssdelete);
 
     return NULL;
 }

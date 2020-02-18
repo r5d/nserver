@@ -1,6 +1,5 @@
 #include <protocol.h>
 
-static Hashmap *hash;
 static TSTree *tst;
 
 int sscreate(char *key)
@@ -49,29 +48,21 @@ int sscreate(char *key)
 
 int ssdelete(char *key)
 {
-    check(hash != NULL, "hash not initialized");
+   check(key != NULL || strlen(key) < 1, "key invalid");
+   check(tst != NULL, "tstree not initialized");
 
-    // 1. create bstring from 'key'.
-    bstring k = bfromcstr(key);
-    check(k != NULL, "key creation failed");
+   Record *rec = (Record *) TSTree_search_prefix(tst, key, strlen(key));
+   if (rec == NULL) {
+       // key does not exists.
+       return 0;
+   }
 
-    // 2. check if key exists.
-    Stats *st = (Stats *) Hashmap_get(hash, k);
-    if (st == NULL) {
-        // key does not exists.
-        return 0;
-    }
+   // Mark as deleted.
+   rec->deleted = 1;
 
-    // 3. delete key.
-    st = (Stats *) Hashmap_delete(hash, k);
-    check(st != NULL, "hash key delete failed");
-
-    // 4. clean up the stats for this key.
-    free(st);
-
-    return 0;
+   return 0;
  error:
-    return -1;
+   return -1;
 }
 
 int sssample_parent(char *key, double s)
