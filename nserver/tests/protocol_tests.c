@@ -17,6 +17,13 @@ char *test_sscreate()
     rc = sscreate("/crimson/sky");
     mu_assert(rc == 0, "sscreate failed 3");
 
+    // delete. check.
+    rc = ssdelete("/crimson/sky");
+    mu_assert(rc == 0, "ssdelete failed 0");
+
+    rc = sscreate("/crimson/sky");
+    mu_assert(rc == 2, "sscreate failed 4");
+
     return NULL;
 }
 
@@ -51,6 +58,21 @@ char *test_sssample()
     mean = sssample("/crimson", 10);
     mu_assert(mean == 15.20, "sssample failed 8");
 
+    // delete check.
+    int rc = ssdelete("/crimson/sky");
+    mu_assert(rc == 0, "ssdeleted failed 0");
+
+    mean = sssample("/crimson/sky", 71);
+    mu_assert(mean == -1, "sssample failed 9");
+
+    rc = sscreate("/crimson/sky");
+    mu_assert(rc == 2, "sscreate failed 1");
+
+    mean = sssample("/crimson/sky", 71);
+    mu_assert(mean == 71.0, "sssample failed 9");
+
+
+
     return NULL;
 }
 
@@ -59,13 +81,23 @@ char *test_ssmean()
     double m = 0;
 
     m = ssmean("/crimson");
-    mu_assert(m == 15.20, "ssmean failed 0");
+    mu_assert(m == 24.50, "ssmean failed 0");
 
     m = ssmean("/vermilion");
     mu_assert(m == 17, "ssmean failed 1");
 
     m = ssmean("/ruby");
     mu_assert(m == -1, "ssmean failed 2");
+
+    m = ssmean("/crimson/sky");
+    mu_assert(m == 71.0, "ssmean failed 3");
+
+    // delete check.
+    int rc  = ssdelete("/crimson/sky");
+    mu_assert(rc == 0, "ssdeleted failed 0");
+
+    m = ssmean("/crimson/sky");
+    mu_assert(m == -1, "ssmean failed 4");
 
     return NULL;
 }
@@ -92,8 +124,8 @@ char *test_ssdump()
     mu_assert(dstr == NULL, "ssdump failed 2");
     debug("DUMP: %s", dstr);
 
-    // clean up.
-    free(dstr);
+    dstr = ssdump("/crimson/sky");
+    mu_assert(dstr == NULL, "ssdump failed 2");
 
     return NULL;
 }
@@ -102,9 +134,7 @@ char *test_sslist()
 {
     char *ks = sslist();
     mu_assert(ks != NULL, "sslist failed");
-    mu_assert(strlen(ks) == 33, "length check failed");
-
-    debug("KEYS:\n%s", ks);
+    mu_assert(strlen(ks) == 20, "length check failed");
 
     return NULL;
 }
