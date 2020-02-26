@@ -17,6 +17,10 @@ int sscreate(char *key)
     if (rec != NULL && rec->deleted == 1) {
         rec->deleted = 0;
 
+        // Allocate fresh Stats.
+        rec->st = Stats_create();
+        check(rec->st != NULL, "stats creation failed");
+
         return 2;
     }
 
@@ -59,6 +63,9 @@ int ssdelete(char *key)
 
    // Mark as deleted.
    rec->deleted = 1;
+
+   // Free Stats.
+   free(rec->st);
 
    return 0;
  error:
