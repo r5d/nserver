@@ -10,7 +10,7 @@ int sscreate(char *key)
     Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
 
     // If it's already there; there's nothing to do.
-    if (rec != NULL && rec-> deleted == 0) {
+    if (rec != NULL && rec->deleted == 0) {
         return 1;
     }
     // If it's already there and deleted, undelete it.
