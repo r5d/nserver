@@ -135,8 +135,8 @@ double ssmean(char *key)
     Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
 
     check(rec != NULL, "record not found");
-    check(rec->st != NULL, "record's st invalid");
     check(rec->deleted != 1, "record was deleted");
+    check(rec->st != NULL, "record's st invalid");
 
     // 2. Get mean.
     double m = Stats_mean(rec->st);
