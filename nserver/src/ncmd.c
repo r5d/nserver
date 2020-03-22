@@ -175,7 +175,7 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
 
             return -1;
         }
-        if (sscreate(bdata(cmd_parts->entry[1])) != 0) {
+        if (sscreate(bdata(cmd_parts->entry[1])) < 0) {
             strncpy(out, "error: create failed\n", RSP_SIZE);
 
             return -1;
