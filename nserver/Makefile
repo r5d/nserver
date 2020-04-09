@@ -42,7 +42,7 @@ tests: $(TESTS)
 
 # The Cleaner
 clean:
-	rm -rf build $(OBJECTS) $(TESTS) $(PROGRAMS)
+	rm -rf TAGS build $(OBJECTS) $(TESTS) $(PROGRAMS)
 	rm -f tests/tests.log
 	find . -name "*.gc" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
