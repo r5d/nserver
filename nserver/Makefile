@@ -28,7 +28,7 @@ $(TARGET): build $(OBJECTS)
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
 
-$(PROGRAMS): LDLIBS += $(TARGET) -lm
+$(PROGRAMS): LDLIBS += $(TARGET) -lm -L/usr/local/lib -lgdbm
 
 build:
 	@mkdir -p build
@@ -36,7 +36,7 @@ build:
 
 # The Unit Tests
 .PHONY: tests
-tests: LDLIBS += $(TARGET) -lm
+tests: LDLIBS += $(TARGET) -lm -L/usr/local/lib -lgdbm
 tests: $(TESTS)
 	sh ./tests/runtests.sh
 
@@ -46,6 +46,7 @@ clean:
 	rm -f tests/tests.log
 	find . -name "*.gc" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
+	rm -rf nserver.db
 
 # The Install
 install: all
