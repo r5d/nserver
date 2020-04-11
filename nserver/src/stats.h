@@ -1,6 +1,10 @@
 #ifndef stats_h
 #define stats_h
+
 #include <math.h>
+#include <stdlib.h>
+#include <bstrlib.h>
+#include <dbg.h>
 
 typedef struct Stats {
     double sum;
@@ -20,6 +24,8 @@ void Stats_sample(Stats *st, double s);
 char *Stats_dump(Stats *st);
 
 char *Stats_stringify(Stats *st);
+
+Stats *Stats_unstringify(char *st_str);
 
 static inline double Stats_mean(Stats *st)
 {

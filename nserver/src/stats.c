@@ -1,7 +1,5 @@
 #include <math.h>
 #include <stats.h>
-#include <stdlib.h>
-#include <dbg.h>
 
 Stats *Stats_recreate(double sum, double sumsq, unsigned long n,
                       double min, double max)
@@ -84,6 +82,41 @@ char *Stats_stringify(Stats *st)
  error:
     if (stats_str) {
         free(stats_str);
+    }
+    return NULL;
+}
+
+
+Stats *Stats_unstringify(char *st_str)
+{
+    Stats *st = NULL;
+
+    check(st_str != NULL, "st_str invalid");
+
+    bstring st_bstr = bfromcstr(st_str);
+    check(st_bstr != NULL, "st_str bstring convert failed");
+
+    struct bstrList *st_list = bsplit(st_bstr, ':');
+    check(st_list != NULL, "st_bstr split failed");
+    check(st_list->qty == 5, "wrong number of st parts");
+
+    st = Stats_create();
+    check(st != NULL, "stats creation failed");
+
+    st->sum = atof(bdata(st_list->entry[0]));
+    st->sumsq = atof(bdata(st_list->entry[1]));
+    st->n = atoi(bdata(st_list->entry[2]));
+    st->min = atof(bdata(st_list->entry[3]));
+    st->max = atof(bdata(st_list->entry[4]));
+
+    // clean up.
+    int rc = bstrListDestroy(st_list);
+    check(rc == BSTR_OK, "st_list destroy failed");
+
+    return st;
+ error:
+    if (st) {
+        free(st);
     }
     return NULL;
 }

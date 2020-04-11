@@ -7,6 +7,8 @@
  * ../../liblcthw/tests/stats_tests.c
  */
 
+static char *st_str = NULL;
+
 char *test_stats_stringify()
 {
     Stats *st = Stats_create();
@@ -19,7 +21,7 @@ char *test_stats_stringify()
     st->min =  28.3921;
     st->max = 238.27;
 
-    char *st_str = Stats_stringify(st);
+    st_str = Stats_stringify(st);
     mu_assert(st_str != NULL, "stats stringify failed");
 
     char *expected_st_str = "8238.34:4260238.83:28:28.39:238.27";
@@ -27,8 +29,27 @@ char *test_stats_stringify()
               "stringified str invalid");
 
     // cleanup
-    free(st_str);
     free(st);
+
+    return NULL;
+}
+
+char *test_stats_unstringify()
+{
+    mu_assert(st_str != NULL, "st_str not initialized");
+
+    Stats *st = Stats_unstringify(st_str);
+    mu_assert(st != NULL, "stats unstringify failed");
+
+    mu_assert(st->sum == 8238.34, "stats sum incorrect");
+    mu_assert(st->sumsq == 4260238.83, "stats sumsq incorrect");
+    mu_assert(st->n == 28, "stats n incorrect");
+    mu_assert(st->min == 28.39, "stats min incorrect");
+    mu_assert(st->max == 238.27, "stats max incorrect");
+
+    // clean up
+    free(st);
+    free(st_str);
 
     return NULL;
 }
@@ -38,6 +59,7 @@ char *all_tests()
     mu_suite_start();
 
     mu_run_test(test_stats_stringify);
+    mu_run_test(test_stats_unstringify);
 
     return NULL;
 }
