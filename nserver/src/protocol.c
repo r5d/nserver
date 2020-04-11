@@ -148,7 +148,7 @@ double ssmean(char *key)
 
 char *ssdump(char *key)
 {
-    check(key != NULL || strlen(key) < 1, "key invalid");
+    check(key != NULL && strlen(key) > 0, "key invalid");
     check(tst != NULL, "tstree not initialized");
 
     // 1. create bstring from 'key'.
