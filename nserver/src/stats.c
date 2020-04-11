@@ -65,3 +65,25 @@ char *Stats_dump(Stats *st)
  error:
     return NULL;
 }
+
+char *Stats_stringify(Stats *st)
+{
+    size_t stats_str_len = 80;
+
+    // allocate space for stringified stats.
+    char *stats_str = calloc(stats_str_len, sizeof(char));
+    check_mem(stats_str);
+
+    // stringify the stats
+    int rc = snprintf(stats_str, stats_str_len,
+                      "%.2f::%.2f::%ld::%.2f::%.2f",
+                      st->sum, st->sumsq, st->n, st->min, st->max);
+    check(rc > 0, "stringify stats failed");
+
+    return stats_str;
+ error:
+    if (stats_str) {
+        free(stats_str);
+    }
+    return NULL;
+}

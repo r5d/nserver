@@ -19,6 +19,8 @@ void Stats_sample(Stats *st, double s);
 
 char *Stats_dump(Stats *st);
 
+char *Stats_stringify(Stats *st);
+
 static inline double Stats_mean(Stats *st)
 {
     return st->sum / st->n;
