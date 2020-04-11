@@ -4,6 +4,7 @@
 
 #include <bstrlib.h>
 #include <darray.h>
+#include <db.h>
 #include <hashmap.h>
 #include <stats.h>
 #include <tstree.h>
@@ -21,6 +22,7 @@ double sssample(char *key, double s);
 double ssmean(char *key);
 char *ssdump(char *key);
 char *sslist();
+int ssstore(char *key);
 
 
 #endif

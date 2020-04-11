@@ -139,6 +139,18 @@ char *test_sslist()
     return NULL;
 }
 
+char *test_ssstore()
+{
+
+    int rc = ssstore("/crimson");
+    mu_assert(rc == 0, "store /crimson failed");
+
+    rc = ssstore("/nonexistent");
+    mu_assert(rc == -1, "store /nonexistent failed");
+
+    return NULL;
+}
+
 char *test_ssdelete()
 {
     int rc = 0;
@@ -164,6 +176,7 @@ char *all_tests()
     mu_run_test(test_ssmean);
     mu_run_test(test_ssdump);
     mu_run_test(test_sslist);
+    mu_run_test(test_ssstore);
     mu_run_test(test_ssdelete);
 
     return NULL;

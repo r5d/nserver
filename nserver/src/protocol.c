@@ -207,3 +207,27 @@ char *sslist()
     return NULL;
 }
 
+int ssstore(char *key)
+{
+    check(key != NULL && strlen(key) > 0, "key invalid");
+    check(tst != NULL, "tstree not initialized");
+
+    // 1. create bstring from 'key'.
+    Record *rec = (Record *) TSTree_search(tst, key, strlen(key));
+
+    check(rec != NULL, "record not found");
+    check(rec->st != NULL, "stats not found for key");
+    check(rec->deleted != 1, "record was deleted");
+
+    // 2. stringify the stats.
+    char *st_str = Stats_stringify(rec->st);
+    check(st_str != NULL, "stats stringify failed");
+
+    // 3. store stats in db.
+    int rc = db_store(key, st_str);
+    check(rc == 0, "db store failed");
+
+    return 0;
+ error:
+    return -1;
+}
