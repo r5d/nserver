@@ -43,3 +43,53 @@ int db_init()
  error:
     return -1;
 }
+
+
+int db_store(char *key, char *value)
+{
+    datum *k_datum = NULL, *v_datum = NULL;
+    GDBM_FILE gf = NULL;
+
+    check(key != NULL && strlen(key) > 0, "key invalid");
+    check(value != NULL && strlen(value) > 0, "data invalid");
+
+    // make key value datum
+    k_datum = mk_datum(key);
+    check(k_datum != NULL, "key datum init failed");
+
+    v_datum = mk_datum(value);
+    check(v_datum != NULL, "value datum init failed");
+
+    // init db.
+    int rc = db_init();
+    check(rc == 0, "db init failed");
+
+    // open the gdbm data in write mode
+    gf = db_open(GDBM_WRITER|GDBM_SYNC);
+    check(gf != NULL, "unable to open db in write  mode");
+
+    // write key -> data to db.
+    rc = gdbm_store(gf, *k_datum, *v_datum, GDBM_REPLACE);
+    check(rc == 0, "gdbm store failed");
+
+    // close db
+    rc = gdbm_close(gf);
+    check(rc == 0, "gdbm close failed");
+
+    // cleanup.
+    free(k_datum);
+    free(v_datum);
+
+    return 0;
+ error:
+    if (k_datum) {
+        free(k_datum);
+    }
+    if (v_datum)  {
+        free(v_datum);
+    }
+    if (gf) {
+        gdbm_close(gf);
+    }
+    return -1;
+}
