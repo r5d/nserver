@@ -231,3 +231,48 @@ int ssstore(char *key)
  error:
     return -1;
 }
+
+int ssload(char *from, char *to)
+{
+    check(from != NULL && strlen(from) > 0, "from invalid");
+    check(to != NULL && strlen(to) > 0, "to invalid");
+    check(tst != NULL, "tstree not initialized");
+
+    // 1. Check if 'to' key already exists.
+    Record *rec = (Record *) TSTree_search(tst, to, strlen(to));
+
+    // 2. if 'to' key exists return immediately with -2.
+    if (rec != NULL && rec->deleted == 0) {
+        return -2;
+    }
+
+    // 3. read 'from' key from database.
+    char *st_str = db_load(from);
+    check(st_str != NULL, "db load failed");
+
+    // 4. construct stats from string.
+    Stats *st = Stats_unstringify(st_str);
+    check(st != NULL, "stats unstringify failed");
+
+    // 5. create Record if needed.
+    if (rec == NULL)  {
+        rec = (Record *) calloc(1, sizeof(Record));
+        check_mem(rec);
+    }
+
+    // 6. get things ready for insertiion
+    bstring tk = bfromcstr(to);
+    check(tk != NULL, "key creation failed");
+
+    rec->key = tk;
+    rec->st = st;
+    rec->deleted = 0;
+
+    // 7. insert Record into 'to' key in the TSTree.
+    tst = TSTree_insert(tst, to, strlen(to), rec);
+    check(tst != NULL, "tstree insert failed");
+
+    return 0;
+ error:
+    return -1;
+}

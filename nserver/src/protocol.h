@@ -23,6 +23,7 @@ double ssmean(char *key);
 char *ssdump(char *key);
 char *sslist();
 int ssstore(char *key);
+int ssload(char *from, char *to);
 
 
 #endif

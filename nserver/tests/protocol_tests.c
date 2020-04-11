@@ -151,6 +151,17 @@ char *test_ssstore()
     return NULL;
 }
 
+char *test_ssload()
+{
+    int rc = ssload("/crimson", "/crimson");
+    mu_assert(rc == -2, "ssload failed 0");
+
+    rc = ssload("/crimson", "/amaranth");
+    mu_assert(rc == 0, "ssload failed 1");
+
+    return NULL;
+}
+
 char *test_ssdelete()
 {
     int rc = 0;
@@ -177,6 +188,7 @@ char *all_tests()
     mu_run_test(test_ssdump);
     mu_run_test(test_sslist);
     mu_run_test(test_ssstore);
+    mu_run_test(test_ssload);
     mu_run_test(test_ssdelete);
 
     return NULL;
