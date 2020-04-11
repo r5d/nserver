@@ -3,11 +3,15 @@
 
 static const char *DB_FILE = "nserver.db";
 
+GDBM_FILE db_open(int flags)
+{
+   return gdbm_open(DB_FILE, 0,flags, S_IRUSR|S_IWUSR, NULL);
+}
+
 int db_init()
 {
     // Create DB if it's not already created.
-    GDBM_FILE  gf = gdbm_open(DB_FILE, 0, GDBM_WRCREAT,
-                              S_IRUSR|S_IWUSR, NULL);
+    GDBM_FILE  gf = db_open(GDBM_WRCREAT);
     check(gf != NULL, "unable to init db");
 
     // Close the DB.
