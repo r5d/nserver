@@ -9,6 +9,7 @@
 
 int db_init();
 int db_store(char *key, char *value);
+char *db_load(char *key);
 
 #endif
 

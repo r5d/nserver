@@ -22,12 +22,10 @@ datum *mk_datum(char *data)
     return NULL;
 }
 
-
 GDBM_FILE db_open(int flags)
 {
    return gdbm_open(DB_FILE, 0,flags, S_IRUSR|S_IWUSR, NULL);
 }
-
 
 int db_init()
 {
@@ -43,7 +41,6 @@ int db_init()
  error:
     return -1;
 }
-
 
 int db_store(char *key, char *value)
 {
@@ -92,4 +89,41 @@ int db_store(char *key, char *value)
         gdbm_close(gf);
     }
     return -1;
+}
+
+char *db_load(char *key)
+{
+    datum *k_datum = NULL;
+    GDBM_FILE gf = NULL;
+
+    check(key != NULL && strlen(key) > 0, "key invalid");
+
+    // make key datum
+    k_datum = mk_datum(key);
+    check(k_datum != NULL, "key datum init failed");
+
+    // init db.
+    int rc = db_init();
+    check(rc == 0, "db init failed");
+
+    // open the gdbm data in read mode
+    gf = db_open(GDBM_READER|GDBM_SYNC);
+    check(gf != NULL, "unable to open db in read  mode");
+
+    // try to fetch value for key.
+    datum v_datum = gdbm_fetch(gf, *k_datum);
+    check(v_datum.dptr != NULL, "key not found");
+
+    // clean up.
+    free(k_datum);
+
+    return v_datum.dptr;
+ error:
+    if (k_datum) {
+        free(k_datum);
+    }
+    if (gf) {
+        gdbm_close(gf);
+    }
+    return NULL;
 }
