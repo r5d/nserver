@@ -22,7 +22,7 @@ char *test_stats_stringify()
     char *st_str = Stats_stringify(st);
     mu_assert(st_str != NULL, "stats stringify failed");
 
-    char *expected_st_str = "8238.34::4260238.83::28::28.39::238.27";
+    char *expected_st_str = "8238.34:4260238.83:28:28.39:238.27";
     mu_assert(strncmp(st_str, expected_st_str, strlen(expected_st_str)) == 0,
               "stringified str invalid");
 

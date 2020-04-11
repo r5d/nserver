@@ -76,7 +76,7 @@ char *Stats_stringify(Stats *st)
 
     // stringify the stats
     int rc = snprintf(stats_str, stats_str_len,
-                      "%.2f::%.2f::%ld::%.2f::%.2f",
+                      "%.2f:%.2f:%ld:%.2f:%.2f",
                       st->sum, st->sumsq, st->n, st->min, st->max);
     check(rc > 0, "stringify stats failed");
 
