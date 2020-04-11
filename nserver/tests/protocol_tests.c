@@ -155,7 +155,7 @@ char *test_ssdelete()
 {
     int rc = 0;
 
-    rc = ssdelete("crimson");
+    rc = ssdelete("/crimson");
     mu_assert(rc == 0, "delete failed 0");
 
     rc = ssdelete("/vermilion");
