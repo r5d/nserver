@@ -108,6 +108,7 @@ int find_function(struct bstrList *cmd_parts)
     struct tagbstring fdump = bsStatic("/dump");
     struct tagbstring fdelete = bsStatic("/delete");
     struct tagbstring flist = bsStatic("/list");
+    struct tagbstring fstore = bsStatic("/store");
 
     check(cmd_parts != NULL, "cmd_parts is NULL");
     check(cmd_parts->qty > 0, "qty check failed");
@@ -132,6 +133,8 @@ int find_function(struct bstrList *cmd_parts)
         return NS_DELETE;
     } else if (bstricmp(cmd_name, &flist) == 0) {
         return NS_LIST;
+    } else if (bstricmp(cmd_name, &fstore) == 0) {
+        return NS_STORE;
     } else {
         return NS_NOP;
     }
@@ -274,6 +277,19 @@ int call_function(int func, struct bstrList *cmd_parts, char *out)
         // Clean up list.
         free(list);
 
+        break;
+    case NS_STORE:
+        if(check_args(cmd_parts, 2) != 0) {
+            strncpy(out, "error: command invalid\n", RSP_SIZE);
+
+            return -1;
+        }
+        if (ssstore(bdata(cmd_parts->entry[1])) < 0) {
+            strncpy(out, "error: store failed\n", RSP_SIZE);
+
+            return -1;
+        }
+        strncpy(out, "OK\n", RSP_SIZE);
         break;
     default:
         strncpy(out, "error: function not found\n", RSP_SIZE);

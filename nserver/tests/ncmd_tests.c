@@ -202,6 +202,18 @@ char *test_find_function()
     funk = find_function(parts);
     mu_assert(funk == NS_LIST, "find function list failed");
 
+    char *store = "/store jowl";
+    parts = cmd_parts(store);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_STORE, "find function list failed");
+
+    store = "/STore    jowl";
+    parts = cmd_parts(store);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_STORE, "find function list failed");
+
     char *nop = "/meant bacon";
     parts = cmd_parts(nop);
     mu_assert(parts != NULL, "cmd_parts failed");
@@ -283,6 +295,22 @@ char *test_call_function()
               || strcmp(msg, "beef\nham\n") == 0,
               "call function failed");
 
+
+    char *ham_store = "/store ham";
+    parts = cmd_parts(ham_store);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_STORE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+
+    char *beef_store = "/store beef";
+    parts = cmd_parts(beef_store);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_STORE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
     // delete ham and beef.
     char *ham_delete = "/delete ham";
     parts = cmd_parts(ham_delete);
@@ -352,6 +380,22 @@ char *test_process()
     mu_assert(strcmp(out, "ham\nbeef\n") == 0
               || strcmp(out, "beef\nham\n") == 0,
               "process failed");
+
+    char *ham_store = "/store ham";
+    rc = process(ham_store, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+
+    char *beef_store = "/store beef";
+    rc = process(beef_store, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *bacon_store = "/store bacon";
+    rc = process(bacon_store, out);
+    mu_assert(rc == -1, "process failed");
+    mu_assert(strcmp(out, "error: store failed\n") == 0, "process failed");
 
     return NULL;
 }
