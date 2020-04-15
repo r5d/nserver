@@ -114,6 +114,10 @@ char *db_load(char *key)
     datum v_datum = gdbm_fetch(gf, *k_datum);
     check(v_datum.dptr != NULL, "key not found");
 
+    // close db
+    rc = gdbm_close(gf);
+    check(rc == 0, "gdbm close failed");
+
     // clean up.
     free(k_datum);
 
