@@ -255,9 +255,11 @@ int ssload(char *from, char *to)
     check(st != NULL, "stats unstringify failed");
 
     // 5. create Record if needed.
+    int rec_created =  0;
     if (rec == NULL)  {
         rec = (Record *) calloc(1, sizeof(Record));
         check_mem(rec);
+        rec_created = 1;
     }
 
     // 6. get things ready for insertiion
@@ -268,9 +270,11 @@ int ssload(char *from, char *to)
     rec->st = st;
     rec->deleted = 0;
 
-    // 7. insert Record into 'to' key in the TSTree.
-    tst = TSTree_insert(tst, to, strlen(to), rec);
-    check(tst != NULL, "tstree insert failed");
+    // 7. insert Record into 'to' key in the TSTree if needed.
+    if (rec_created == 1) {
+        tst = TSTree_insert(tst, to, strlen(to), rec);
+        check(tst != NULL, "tstree insert failed");
+    }
 
     return 0;
  error:
