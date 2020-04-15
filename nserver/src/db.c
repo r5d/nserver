@@ -12,7 +12,7 @@ datum *mk_datum(char *data)
     check(d != NULL, "datum mem alloc failed");
 
     d->dptr = data;
-    d->dsize = strlen(data) + 2;
+    d->dsize = strlen(data);
 
     return d;
  error:
