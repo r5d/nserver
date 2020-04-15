@@ -214,6 +214,18 @@ char *test_find_function()
     funk = find_function(parts);
     mu_assert(funk == NS_STORE, "find function list failed");
 
+    char *load = "/load jowl ears";
+    parts = cmd_parts(load);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_LOAD, "find function list failed");
+
+    load = "/LoAD             jowl ears";
+    parts = cmd_parts(load);
+    mu_assert(parts != NULL, "cmp_parts failed");
+    funk = find_function(parts);
+    mu_assert(funk == NS_LOAD, "find function list failed");
+
     char *nop = "/meant bacon";
     parts = cmd_parts(nop);
     mu_assert(parts != NULL, "cmd_parts failed");
@@ -311,7 +323,22 @@ char *test_call_function()
     mu_assert(rc == 0, "call function failed");
     mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
 
-    // delete ham and beef.
+    char *roastedham_load = "/load ham roastedham";
+    parts = cmd_parts(roastedham_load);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_LOAD, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *grilledbeef_load = "/load beef grilledbeef";
+    parts = cmd_parts(grilledbeef_load);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_LOAD, parts, msg);
+    printf("LOAD FIAAAL %d %s\n", rc, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    // delete ham, roastedham, beef, and roastedbeef.
     char *ham_delete = "/delete ham";
     parts = cmd_parts(ham_delete);
     mu_assert(parts != NULL, "cmd_parts failed");
@@ -319,8 +346,22 @@ char *test_call_function()
     mu_assert(rc == 0, "call function failed");
     mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
 
+    char *roastedham_delete = "/delete roastedham";
+    parts = cmd_parts(roastedham_delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_DELETE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
     char *beef_delete = "/delete beef";
     parts = cmd_parts(beef_delete);
+    mu_assert(parts != NULL, "cmd_parts failed");
+    rc = call_function(NS_DELETE, parts, msg);
+    mu_assert(rc == 0, "call function failed");
+    mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
+
+    char *grilledbeef_delete = "/delete grilledbeef";
+    parts = cmd_parts(grilledbeef_delete);
     mu_assert(parts != NULL, "cmd_parts failed");
     rc = call_function(NS_DELETE, parts, msg);
     mu_assert(rc == 0, "call function failed");
@@ -348,6 +389,16 @@ char *test_process()
     rc = process(beef, out);
     mu_assert(rc == 0, "process failed");
     mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *ham_sample = "/sample ham 4.3";
+    rc = process(ham_sample, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "Mean: 4.30\n") == 0, "process failed");
+
+    ham_sample = "/sample ham 6.0";
+    rc = process(ham_sample, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "Mean: 5.15\n") == 0, "process failed");
 
     char *bacon_sample = "/sample bacon 4.2";
     rc = process(bacon_sample, out);
@@ -386,7 +437,6 @@ char *test_process()
     mu_assert(rc == 0, "process failed");
     mu_assert(strcmp(out, "OK\n") == 0, "process failed");
 
-
     char *beef_store = "/store beef";
     rc = process(beef_store, out);
     mu_assert(rc == 0, "process failed");
@@ -396,6 +446,26 @@ char *test_process()
     rc = process(bacon_store, out);
     mu_assert(rc == -1, "process failed");
     mu_assert(strcmp(out, "error: store failed\n") == 0, "process failed");
+
+    char *roastedham_load = "/load ham roastedham";
+    rc = process(roastedham_load, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *roastedham_delete = "/delete roastedham";
+    rc = process(roastedham_delete, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    roastedham_load = "/load ham roastedham";
+    rc = process(roastedham_load, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "OK\n") == 0, "process failed");
+
+    char *roastedham_dump = "/dump roastedham";
+    rc = process(roastedham_dump, out);
+    mu_assert(rc == 0, "process failed");
+    mu_assert(strcmp(out, "sum: 10.300000, sumsq: 54.490000, n: 2, min: 4.300000, max: 6.000000, mean: 5.150000, stddev: 1.202082\n") == 0, "process failed");
 
     return NULL;
 }

@@ -19,6 +19,7 @@ enum FUNCTIONS {
                 NS_DELETE,
                 NS_LIST,
                 NS_STORE,
+                NS_LOAD,
                 NS_NOP = -1
 };
 
