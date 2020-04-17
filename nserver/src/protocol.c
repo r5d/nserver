@@ -192,7 +192,16 @@ void traverse_tree(void *value, void *data)
 
 char *sslist()
 {
-    check(tst != NULL, "tstree not initialized");
+    char *list = NULL, *tmp = NULL;
+
+    if (tst == NULL) {
+        list = (char *) calloc(7 + 1, sizeof(char));
+        check_mem(list);
+
+        list = strncpy(list, "EMPTY\n\r", 7);
+
+        return list;
+    }
 
     // 1. Create "accumulator" string.
     bstring ks_str = bfromcstr("");
@@ -201,9 +210,23 @@ char *sslist()
     // 2. Accumulate keys into "accumulator" string.
     TSTree_traverse(tst, traverse_tree, ks_str);
 
+    // 3. Make result.
+    tmp = bstr2cstr(ks_str, ' ');
+
+    list = (char *) calloc(strlen(tmp) + 1, sizeof(char));
+    check_mem(list);
+
+    list = strncpy(list, tmp, strlen(tmp));
+
+    // 4. Clean up.
+    bcstrfree(tmp);
+
     // 3. Return result.
-    return bstr2cstr(ks_str, ' ');
+    return list;
  error:
+    if (tmp) {
+        bcstrfree(tmp);
+    }
     return NULL;
 }
 
