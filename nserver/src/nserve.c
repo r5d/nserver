@@ -27,10 +27,10 @@ int barfsock(char *buf, size_t buf_sz, int sock)
 
 void nserve(int sock)
 {
-    char *out = (char *) calloc(sizeof(char), RSP_SIZE + 1);
+    char *out = (char *) calloc(RSP_SIZE + 1, sizeof(char));
     check_mem(out);
 
-    char *cmd = (char *) calloc(sizeof(char), CMD_MAX_SIZE  + 1);
+    char *cmd = (char *) calloc(CMD_MAX_SIZE  + 1, sizeof(char));
     check_mem(cmd);
 
     int rc = 0, done = 0;
