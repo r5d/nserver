@@ -1,3 +1,8 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/*
+ * Copyright © 2020 rsiddharth <s@ricketyspace.net>
+ */
+
 #include "minunit.h"
 #include <db.h>
 

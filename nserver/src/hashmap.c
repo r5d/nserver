@@ -1,3 +1,9 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/*
+ * Copyright © 2010, Zed A. Shaw.
+ * Copyright © 2020 rsiddharth <s@ricketyspace.net>
+ */
+
 #undef NDEBUG
 #include <stdint.h>
 #include <darray_algos.h>

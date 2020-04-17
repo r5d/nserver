@@ -1,3 +1,8 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/*
+ * Copyright © 2010, Zed A. Shaw.
+ */
+
 #undef NDEBUG
 #ifndef _minunit_h
 #define _minunit_h

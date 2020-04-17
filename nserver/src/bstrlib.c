@@ -1,8 +1,12 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
 /*
- * This is a slightly modified version of bstrlib.h (v1.0.0).
- *
- * The original version of bstrlib.c (v1.0.0) can be found in
- * ../../docs/bstrlib-v1.0.0.tar.xz.
+ * Copyright © 2014 Paul Hsieh
+ * Copyright © 2020 rsiddharth
+ */
+
+/*
+ * This is a slightly modified version of bstrlib.c from the bstrlib
+ * library (https://github.com/websnarf/bstrlib/releases/tag/v1.0.0).
  */
 
 /*

@@ -1,3 +1,9 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/*
+ * Copyright © 2010, Zed A. Shaw.
+ * Copyright © 2020 rsiddharth <s@ricketyspace.net>
+ */
+
 #include <darray_algos.h>
 
 int DArray_qsort(DArray *array, DArray_compare cmp)
