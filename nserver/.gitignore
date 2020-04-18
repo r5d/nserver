@@ -1,2 +1,9 @@
-tests/*_tests
+*.o
+*.log
+
+build/
+
+TAGS
 nserver.db
+bin/statserve
+tests/*_tests
