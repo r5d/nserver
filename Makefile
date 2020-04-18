@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Copyright © 2010, Zed A. Shaw.
+# Copyright © 2020 rsiddharth <s@ricketyspace.net>
+#
+
 CFLAGS=-g -O2 -Wall -Wextra -Isrc -I/usr/local/include -DNDEBUG $(OPTFLAGS)
 LIBS=-ldl $(OPTLIBS)
 PREFIX?=/usr/local
