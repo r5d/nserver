@@ -80,6 +80,7 @@ void *TSTree_search_prefix(TSTree *root, const char *key, size_t len)
         return NULL;
 
     TSTree *node = root;
+    TSTree *last = NULL;
     size_t i = 0;
 
     while (i < len && node) {
@@ -89,7 +90,7 @@ void *TSTree_search_prefix(TSTree *root, const char *key, size_t len)
             i++;
             if (i < len) {
                 if (node->value) {
-                    return node->value;
+                    last = node->value;
                 }
                 node = node->equal;
             }
@@ -98,7 +99,7 @@ void *TSTree_search_prefix(TSTree *root, const char *key, size_t len)
         }
     }
 
-    return NULL;
+    return last;
 }
 
 void TSTree_collect_keys(TSTree *node, char *key, size_t key_sz, DArray *array)
