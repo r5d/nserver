@@ -1,7 +1,7 @@
 # nserver
 
 A nihilistic stats server written is part of reading Learn C the
-Harday.
+Hard Way.
 
 
 ## compiling
@@ -15,25 +15,25 @@ You'll need a C compiler (clang or gcc), the [gdbm][1] library and
 To compile the server, do:
 
 ```
-make
+gmake
 ```
 
 To compile a debuggable version of the server, do:
 
 ```
-make dev
+gmake dev
 ```
 
 The usual:
 
 ```
-make clean
+gmake clean
 ```
 
 clean up things.
 
 
-## statserve
+## running
 
 To start this server, do:
 
