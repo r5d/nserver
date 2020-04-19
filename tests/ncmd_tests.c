@@ -339,7 +339,6 @@ char *test_call_function()
     parts = cmd_parts(grilledbeef_load);
     mu_assert(parts != NULL, "cmd_parts failed");
     rc = call_function(NS_LOAD, parts, msg);
-    printf("LOAD FIAAAL %d %s\n", rc, msg);
     mu_assert(rc == 0, "call function failed");
     mu_assert(strcmp(msg, "OK\n") == 0, "call function failed");
 
