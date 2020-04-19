@@ -31,7 +31,7 @@ The usual:
 gmake clean
 ```
 
-clean up things.
+to clean up things.
 
 This was written on an OpenBSD machine. There might be issues
 compiling this one other systems.
