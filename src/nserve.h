@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 
 #include <bstrlib.h>
 #include <ncmd.h>

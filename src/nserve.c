@@ -30,9 +30,29 @@ int barfsock(char *buf, size_t buf_sz, int sock)
     return -1;
 }
 
+int set_recv_timeout(int sock) {
+    struct timeval tv;
+    tv.tv_sec = 30;
+    tv.tv_usec = 0;
+
+    int rc = setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
+                       &tv, sizeof(tv));
+    check(rc == 0, "setsockopt failed");
+
+    return 0;
+ error:
+    return -1;
+}
+
 void nserve(int sock)
 {
     char *out = NULL, *cmd = NULL;
+    int rc = 0;
+
+    check(sock > 0, "invalid socket");
+
+    rc = set_recv_timeout(sock);
+    check(rc == 0, "setting recv timeout failed");
 
     out = (char *) calloc(RSP_SIZE + 1, sizeof(char));
     check_mem(out);
@@ -40,7 +60,6 @@ void nserve(int sock)
     cmd = (char *) calloc(CMD_MAX_SIZE  + 1, sizeof(char));
     check_mem(cmd);
 
-    int rc = 0;
     do {
         // clear out, cmd.
         memset(out, '\0', RSP_SIZE + 1);
@@ -73,5 +92,5 @@ void nserve(int sock)
     if (out)
       free(out);
 
-    exit(1);
+    exit(0);
 }
