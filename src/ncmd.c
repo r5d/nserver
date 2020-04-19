@@ -42,7 +42,7 @@ int check_cmd(char *cmd, char *err)
         strncpy(err, "closing connection\n", RSP_SIZE);
         return -1;
     } else {
-        strncpy(err, "command size invalid\n", RSP_SIZE);
+        strncpy(err, "invalid command\n", RSP_SIZE);
         return -1;
     }
 

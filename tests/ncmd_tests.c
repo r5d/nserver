@@ -81,7 +81,7 @@ char *test_check_cmd()
 
     rc = check_cmd(cmd, err);
     mu_assert(rc < 0, "check_cmd failed");
-    mu_assert(strcmp(err, "command size invalid\n") == 0,
+    mu_assert(strcmp(err, "invalid command\n") == 0,
               "wrong err msg");
 
     memset(err, '\0', RSP_SIZE);
