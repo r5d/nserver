@@ -32,13 +32,15 @@ int barfsock(char *buf, size_t buf_sz, int sock)
 
 void nserve(int sock)
 {
-    char *out = (char *) calloc(RSP_SIZE + 1, sizeof(char));
+    char *out = NULL, *cmd = NULL;
+
+    out = (char *) calloc(RSP_SIZE + 1, sizeof(char));
     check_mem(out);
 
-    char *cmd = (char *) calloc(CMD_MAX_SIZE  + 1, sizeof(char));
+    cmd = (char *) calloc(CMD_MAX_SIZE  + 1, sizeof(char));
     check_mem(cmd);
 
-    int rc = 0, done = 0;
+    int rc = 0;
     do {
         // clear out, cmd.
         memset(out, '\0', RSP_SIZE + 1);
@@ -50,29 +52,26 @@ void nserve(int sock)
 
         rc = process(cmd, out);
         if (rc < 0) {
-            done = 1;
+            break;
         }
 
         // Write response to socket.
         rc = barfsock(out, strlen(out), sock);
         check(rc != -1, "nserve: echo failed");
-    } while(done != 1);
+    } while(1);
 
-    // Close socket.
-    rc = close(sock);
-    check(rc == 0, "nserve: close failed");
-
-    // Cleanup.
-    free(cmd);
-
-    exit(0);
+    // fallthrough.
  error:
-    rc = close(sock);
-    check(rc == 0, "nserve: close failed");
+    strncpy(out, "closing connection\n", RSP_SIZE);
+    barfsock(out, strlen(out), sock);
+
+    close(sock);
 
     // Cleanup if needed.
     if (cmd)
         free(cmd);
+    if (out)
+      free(out);
 
     exit(1);
 }
