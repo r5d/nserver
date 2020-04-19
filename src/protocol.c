@@ -198,6 +198,7 @@ void traverse_tree(void *value, void *data)
 char *sslist()
 {
     char *list = NULL, *tmp = NULL;
+    bstring ks_str = NULL;
 
     if (tst == NULL) {
         list = (char *) calloc(7 + 1, sizeof(char));
@@ -209,7 +210,7 @@ char *sslist()
     }
 
     // 1. Create "accumulator" string.
-    bstring ks_str = bfromcstr("");
+    ks_str = bfromcstr("");
     check(ks_str != NULL, "error creating keys_str");
 
     // 2. Accumulate keys into "accumulator" string.
@@ -224,11 +225,15 @@ char *sslist()
     list = strncpy(list, tmp, strlen(tmp));
 
     // 4. Clean up.
+    bdestroy(ks_str);
     bcstrfree(tmp);
 
     // 3. Return result.
     return list;
  error:
+    if (ks_str) {
+        bdestroy(ks_str);
+    }
     if (tmp) {
         bcstrfree(tmp);
     }
