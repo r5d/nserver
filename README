@@ -1,8 +1,9 @@
 # nserver
 
-A nihilistic stats server written is part of reading Learn C the
-Hard Way.
+A nihilistic stats server written as part of reading Learn C the Hard
+Way.
 
+It's a toy, bugs galore.
 
 ## compiling
 
@@ -32,6 +33,8 @@ gmake clean
 
 clean up things.
 
+This was written on an OpenBSD machine. There might be issues
+compiling this one other systems.
 
 ## running
 
