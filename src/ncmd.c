@@ -344,6 +344,10 @@ int process(char *cmd, char *out)
     rc = call_function(FUNC, parts, out);
     check(rc != -1, "call function failed");
 
+    // clean up.
+    rc = bstrListDestroy(parts);
+    check(rc != -1, "parts clean up failed");
+
     return 0;
  error:
     return -1;
