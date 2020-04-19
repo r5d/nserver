@@ -38,7 +38,7 @@ clean up things.
 To start this server, do:
 
 ```
-./bin/statserve
+./bin/nserver
 ```
 
 It'll be listening on port 7899.

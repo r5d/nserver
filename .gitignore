@@ -5,5 +5,5 @@ build/
 
 TAGS
 nserver.db
-bin/statserve
+bin/nserver
 tests/*_tests

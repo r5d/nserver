@@ -17,28 +17,28 @@ int main(void)
     pid_t pidc;
 
     sockfd_s = get_socket();
-    check(sockfd_s > 0, "stateserv: unable to get socket");
+    check(sockfd_s > 0, "nserver: unable to get socket");
 
     rc = listen(sockfd_s, BACKLOG);
-    check(rc == 0, "statserve: listen failed");
+    check(rc == 0, "nserver: listen failed");
 
     do {
         printf("Waiting for connection...\n");
         sockfd_c = accept(sockfd_s, &sockaddr_c, &sockaddr_c_len);
 
         pidc = fork();
-        check(pidc != -1, "statserve: fork failed");
+        check(pidc != -1, "nserver: fork failed");
 
         if (pidc == 0) {
             nserve(sockfd_c);
         }
 
         rc = close(sockfd_c);
-        check(rc == 0, "statserv: close failed");
+        check(rc == 0, "nserver: close failed");
     } while(1);
 
     rc = close(sockfd_s);
-    check(rc == 0, "statserv: close failed");
+    check(rc == 0, "nserver: close failed");
 
     return 0;
 
