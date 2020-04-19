@@ -295,6 +295,9 @@ int ssload(char *from, char *to)
     Stats *st = Stats_unstringify(st_str);
     check(st != NULL, "stats unstringify failed");
 
+    // clean up st_str.
+    free(st_str);
+
     // 5. create Record if needed.
     int rec_created =  0;
     if (rec == NULL)  {
